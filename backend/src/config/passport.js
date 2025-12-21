@@ -37,7 +37,9 @@ export function configurePassport() {
                         if (user) {
                             // User exists, update profile info if needed
                             user.name = profile.displayName;
-                            user.avatar = profile.photos?.[0]?.value;
+                            if (!user.avatar) {
+                                user.avatar = profile.photos?.[0]?.value;
+                            }
                             await user.save();
                             user.isNewUser = false;
                             return done(null, user);

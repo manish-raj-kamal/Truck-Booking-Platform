@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '../utils/cropImage';
 
 export default function ProfilePage() {
     const navigate = useNavigate();
@@ -11,6 +13,8 @@ export default function ProfilePage() {
     const [success, setSuccess] = useState(null);
     const [error, setError] = useState(null);
     const fileInputRef = useRef(null);
+
+    // Profile State
     const [profile, setProfile] = useState({
         name: '',
         email: '',
@@ -18,6 +22,13 @@ export default function ProfilePage() {
         newPassword: '',
         confirmPassword: ''
     });
+
+    // Cropper State
+    const [imageSrc, setImageSrc] = useState(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [showCropper, setShowCropper] = useState(false);
 
     useEffect(() => {
         if (!user) {
@@ -41,29 +52,49 @@ export default function ProfilePage() {
         fileInputRef.current?.click();
     };
 
-    const handleAvatarChange = async (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+    const handleFileChange = async (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
 
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            setError('Please select an image file');
-            return;
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                setError('Please select an image file');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                setError('Image size must be less than 5MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+                setImageSrc(reader.result);
+                setShowCropper(true);
+                // Reset input so same file can be selected again if needed
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            });
+            reader.readAsDataURL(file);
         }
+    };
 
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            setError('Image size must be less than 5MB');
-            return;
-        }
+    const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    }, []);
 
-        setAvatarLoading(true);
-        setError(null);
-        setSuccess(null);
-
+    const handleUploadCroppedImage = async () => {
         try {
+            setAvatarLoading(true);
+            setShowCropper(false);
+
+            const croppedImageBlob = await getCroppedImg(
+                imageSrc,
+                croppedAreaPixels
+            );
+
             const formData = new FormData();
-            formData.append('avatar', file);
+            formData.append('avatar', croppedImageBlob, 'avatar.jpg');
 
             const response = await axios.put('/api/users/avatar', formData, {
                 headers: {
@@ -77,8 +108,10 @@ export default function ProfilePage() {
             }
 
             setSuccess('Profile photo updated successfully!');
-        } catch (err) {
-            setError(err.response?.data?.message || 'Failed to update profile photo');
+            setImageSrc(null);
+        } catch (e) {
+            console.error(e);
+            setError('Failed to upload image');
         } finally {
             setAvatarLoading(false);
         }
@@ -160,7 +193,7 @@ export default function ProfilePage() {
                             <input
                                 type="file"
                                 ref={fileInputRef}
-                                onChange={handleAvatarChange}
+                                onChange={handleFileChange}
                                 accept="image/*"
                                 className="hidden"
                             />
@@ -429,6 +462,72 @@ export default function ProfilePage() {
                     </div>
                 </div>
             </div>
+
+            {/* Cropper Modal */}
+            {showCropper && (
+                <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        {/* Background overlay */}
+                        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={() => setShowCropper(false)}></div>
+
+                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="sm:flex sm:items-start">
+                                    <div className="w-full">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4" id="modal-title">
+                                            Edit Profile Photo
+                                        </h3>
+                                        {/* Cop-wrapper */}
+                                        <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden">
+                                            <Cropper
+                                                image={imageSrc}
+                                                crop={crop}
+                                                zoom={zoom}
+                                                aspect={1}
+                                                onCropChange={setCrop}
+                                                onCropComplete={onCropComplete}
+                                                onZoomChange={setZoom}
+                                            />
+                                        </div>
+                                        <div className="mt-4">
+                                            <label className="block text-sm font-medium text-gray-700">Zoom</label>
+                                            <input
+                                                type="range"
+                                                value={zoom}
+                                                min={1}
+                                                max={3}
+                                                step={0.1}
+                                                aria-labelledby="Zoom"
+                                                onChange={(e) => setZoom(e.target.value)}
+                                                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button
+                                    type="button"
+                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                    onClick={handleUploadCroppedImage}
+                                    disabled={avatarLoading}
+                                >
+                                    {avatarLoading ? 'Uploading...' : 'Save Photo'}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                    onClick={() => setShowCropper(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
