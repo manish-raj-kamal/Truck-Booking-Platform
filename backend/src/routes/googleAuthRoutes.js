@@ -30,7 +30,6 @@ router.get('/google/callback',
                     role: user.role,
                     email: user.email,
                     name: user.name,
-                    avatar: user.avatar,
                     authProvider: user.authProvider,
                     passwordHash: !!user.passwordHash
                 },
