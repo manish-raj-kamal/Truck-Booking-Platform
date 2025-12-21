@@ -25,7 +25,7 @@ function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      <Route path="/oauth/callback" element={<AuthCallbackPage />} />
       <Route path="/complete-profile" element={<CompleteProfilePage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/load-board" element={<LoadBoardPage />} />

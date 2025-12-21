@@ -41,7 +41,7 @@ router.get('/google/callback',
             // Redirect to frontend with token (and new flag if new user)
             const frontendURL = process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://truck-booking-platform-lemon.vercel.app' : 'http://localhost:5173');
             const newUserParam = isNewUser ? '&new=true' : '';
-            res.redirect(`${frontendURL}/auth/callback?token=${token}${newUserParam}`);
+            res.redirect(`${frontendURL}/oauth/callback?token=${token}${newUserParam}`);
         } catch (error) {
             console.error('Google callback error:', error);
             const frontendURL = process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://truck-booking-platform-lemon.vercel.app' : 'http://localhost:5173');
