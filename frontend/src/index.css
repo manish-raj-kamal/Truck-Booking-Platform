@@ -1,0 +1,611 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes slide {
+    0%, 100% {
+      transform: translateX(0px);
+    }
+    50% {
+      transform: translateX(20px);
+    }
+  }
+  
+  @keyframes road {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: 50;
+    }
+  }
+  
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Truck Movement Animations */
+  @keyframes truck-move-1 {
+    0% {
+      transform: translateX(-150px) translateY(0) scale(1);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.2;
+    }
+    50% {
+      transform: translateX(50vw) translateY(-10px) scale(1.05);
+    }
+    90% {
+      opacity: 0.2;
+    }
+    100% {
+      transform: translateX(100vw) translateY(0) scale(1);
+      opacity: 0;
+    }
+  }
+
+  @keyframes truck-move-2 {
+    0% {
+      transform: translateX(-120px) translateY(0) scale(0.9);
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.15;
+    }
+    50% {
+      transform: translateX(45vw) translateY(5px) scale(0.95);
+    }
+    85% {
+      opacity: 0.15;
+    }
+    100% {
+      transform: translateX(100vw) translateY(0) scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  @keyframes truck-move-3 {
+    0% {
+      transform: translateX(-180px) translateY(0) scale(0.8);
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.1;
+    }
+    50% {
+      transform: translateX(40vw) translateY(-5px) scale(0.85);
+    }
+    80% {
+      opacity: 0.1;
+    }
+    100% {
+      transform: translateX(100vw) translateY(0) scale(0.8);
+      opacity: 0;
+    }
+  }
+
+  @keyframes truck-enter-right {
+    0% {
+      transform: translateX(150px) scale(1);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.2;
+    }
+    50% {
+      transform: translateX(-40vw) scale(1.05);
+    }
+    90% {
+      opacity: 0.2;
+    }
+    100% {
+      transform: translateX(-100vw) scale(1);
+      opacity: 0;
+    }
+  }
+
+  @keyframes truck-enter-right-delayed {
+    0% {
+      transform: translateX(130px) scale(0.9);
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.15;
+    }
+    50% {
+      transform: translateX(-35vw) scale(0.95);
+    }
+    85% {
+      opacity: 0.15;
+    }
+    100% {
+      transform: translateX(-100vw) scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  /* Package Float Animations */
+  @keyframes package-float-1 {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-30px) rotate(5deg);
+    }
+    75% {
+      transform: translateY(-15px) rotate(-5deg);
+    }
+  }
+
+  @keyframes package-float-2 {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg) translateX(0);
+    }
+    33% {
+      transform: translateY(-25px) rotate(-8deg) translateX(10px);
+    }
+    66% {
+      transform: translateY(-10px) rotate(8deg) translateX(-10px);
+    }
+  }
+
+  @keyframes package-float-3 {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg) scale(1);
+    }
+    50% {
+      transform: translateY(-35px) rotate(10deg) scale(1.1);
+    }
+  }
+
+  /* Location Pin Animations */
+  @keyframes pin-bounce-1 {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-15px) scale(1.1);
+    }
+  }
+
+  @keyframes pin-bounce-2 {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    40% {
+      transform: translateY(-20px) scale(1.15);
+    }
+    60% {
+      transform: translateY(-18px) scale(1.12);
+    }
+  }
+
+  /* Route Line Animations */
+  @keyframes dash {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: 300;
+    }
+  }
+
+  @keyframes dash-reverse {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: -230;
+    }
+  }
+
+  /* Orbit Ring Animations */
+  @keyframes orbit-ring-1 {
+    0% {
+      transform: rotate(0deg) scale(1);
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0.3;
+      transform: rotate(180deg) scale(1.05);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes orbit-ring-2 {
+    0% {
+      transform: rotate(0deg) scale(1);
+      opacity: 0.15;
+    }
+    50% {
+      opacity: 0.25;
+      transform: rotate(-180deg) scale(1.08);
+    }
+    100% {
+      transform: rotate(-360deg) scale(1);
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes orbit-ring-3 {
+    0% {
+      transform: rotate(0deg) scale(1);
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.2;
+      transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+      opacity: 0.1;
+    }
+  }
+
+  /* Drone Flight Animations */
+  @keyframes drone-fly-1 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+      transform: translate(100px, -50px) rotate(5deg);
+    }
+    50% {
+      transform: translate(200px, -30px) rotate(-3deg);
+    }
+    75% {
+      transform: translate(100px, -60px) rotate(4deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+  }
+
+  @keyframes drone-fly-2 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    30% {
+      transform: translate(-80px, -40px) rotate(-6deg);
+    }
+    60% {
+      transform: translate(-150px, -20px) rotate(4deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+  }
+
+  /* Building/Warehouse Animations */
+  @keyframes fade-scale {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes fade-scale-delayed {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.15;
+    }
+    50% {
+      transform: scale(1.08);
+      opacity: 0.2;
+    }
+  }
+
+  /* Signal Pulse Animation */
+  @keyframes signal-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.2;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0.2;
+    }
+  }
+
+  /* Network Line Animations */
+  @keyframes network-pulse {
+    0% {
+      stroke-dashoffset: 0;
+      opacity: 0.15;
+    }
+    50% {
+      opacity: 0.25;
+    }
+    100% {
+      stroke-dashoffset: 150;
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes network-pulse-reverse {
+    0% {
+      stroke-dashoffset: 0;
+      opacity: 0.15;
+    }
+    50% {
+      opacity: 0.2;
+    }
+    100% {
+      stroke-dashoffset: -120;
+      opacity: 0.15;
+    }
+  }
+
+  /* Hub Rotation */
+  @keyframes hub-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Apply Animations */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-slide {
+    animation: slide 4s ease-in-out infinite;
+  }
+  
+  .animate-road {
+    animation: road 2s linear infinite;
+  }
+  
+  .animate-bounce-slow {
+    animation: bounce-slow 2s ease-in-out infinite;
+  }
+
+  .animate-truck-move-1 {
+    animation: truck-move-1 20s linear infinite;
+  }
+
+  .animate-truck-move-2 {
+    animation: truck-move-2 25s linear infinite 5s;
+  }
+
+  .animate-truck-move-3 {
+    animation: truck-move-3 30s linear infinite 10s;
+  }
+
+  .animate-truck-enter-right {
+    animation: truck-enter-right 18s linear infinite;
+  }
+
+  .animate-truck-enter-right-delayed {
+    animation: truck-enter-right-delayed 22s linear infinite 4s;
+  }
+
+  .animate-package-float-1 {
+    animation: package-float-1 6s ease-in-out infinite;
+  }
+
+  .animate-package-float-2 {
+    animation: package-float-2 7s ease-in-out infinite 1s;
+  }
+
+  .animate-package-float-3 {
+    animation: package-float-3 8s ease-in-out infinite 2s;
+  }
+
+  .animate-pin-bounce-1 {
+    animation: pin-bounce-1 3s ease-in-out infinite;
+  }
+
+  .animate-pin-bounce-2 {
+    animation: pin-bounce-2 3.5s ease-in-out infinite 0.5s;
+  }
+
+  .animate-dash {
+    animation: dash 15s linear infinite;
+  }
+
+  .animate-dash-reverse {
+    animation: dash-reverse 18s linear infinite;
+  }
+
+  .animate-orbit-ring-1 {
+    animation: orbit-ring-1 30s linear infinite;
+  }
+
+  .animate-orbit-ring-2 {
+    animation: orbit-ring-2 40s linear infinite;
+  }
+
+  .animate-orbit-ring-3 {
+    animation: orbit-ring-3 50s linear infinite;
+  }
+
+  .animate-drone-fly-1 {
+    animation: drone-fly-1 12s ease-in-out infinite;
+  }
+
+  .animate-drone-fly-2 {
+    animation: drone-fly-2 15s ease-in-out infinite 3s;
+  }
+
+  .animate-fade-scale {
+    animation: fade-scale 8s ease-in-out infinite;
+  }
+
+  .animate-fade-scale-delayed {
+    animation: fade-scale-delayed 10s ease-in-out infinite 2s;
+  }
+
+  .animate-signal-pulse {
+    animation: signal-pulse 3s ease-in-out infinite;
+  }
+
+  .animate-network-pulse {
+    animation: network-pulse 10s linear infinite;
+  }
+
+  .animate-network-pulse-reverse {
+    animation: network-pulse-reverse 12s linear infinite;
+  }
+
+  .animate-hub-rotate {
+    animation: hub-rotate 20s linear infinite;
+  }
+
+  /* 3D Truck Animations */
+  @keyframes truck3d-ltr {
+    0% {
+      transform: translateX(-15%) translateY(0px);
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    50% {
+      transform: translateX(50vw) translateY(-8px);
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(115vw) translateY(0px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes truck3d-rtl {
+    0% {
+      transform: translateX(0%) translateY(0px);
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    50% {
+      transform: translateX(-50vw) translateY(-8px);
+    }
+    95% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-115vw) translateY(0px);
+      opacity: 0;
+    }
+  }
+
+  /* Floating particles animation */
+  @keyframes float-particle {
+    0%, 100% {
+      transform: translateY(0) translateX(0) scale(1);
+      opacity: 0.2;
+    }
+    25% {
+      transform: translateY(-30px) translateX(10px) scale(1.2);
+      opacity: 0.4;
+    }
+    50% {
+      transform: translateY(-50px) translateX(-5px) scale(0.8);
+      opacity: 0.3;
+    }
+    75% {
+      transform: translateY(-20px) translateX(-15px) scale(1.1);
+      opacity: 0.5;
+    }
+  }
+
+  /* Grid floor movement */
+  @keyframes grid-move {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 40px 40px;
+    }
+  }
+
+  /* Road dashed line animation */
+  @keyframes road-dash {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: -50;
+    }
+  }
+
+  /* Slow pulse animation */
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Fade in animation */
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+  }
+
+  /* Modal fade in animation */
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+}
