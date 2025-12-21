@@ -17,7 +17,7 @@ const app = express();
 
 // Configure CORS to allow requests from any origin (or specific ones)
 app.use(cors({
-  origin: process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://truck-booking-platform-lemon.vercel.app' : 'http://localhost:5173'),
+  origin: process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://somya-truck-booking.vercel.app' : 'http://localhost:5173'),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
