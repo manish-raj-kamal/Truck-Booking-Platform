@@ -392,7 +392,7 @@ export default function RegisterPage() {
             {/* Google Sign-Up Button */}
             <div className="mt-4">
               <a
-                href="http://localhost:4000/auth/google"
+                href="/auth/google"
                 className="w-full flex items-center justify-center gap-3 py-2.5 sm:py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm sm:text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out active:scale-[0.98]"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
