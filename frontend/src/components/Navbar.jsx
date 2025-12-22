@@ -276,25 +276,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Contact Bar - Hidden on very small screens */}
-      <div className="hidden sm:block bg-gradient-to-r from-purple-900/50 via-slate-900/50 to-purple-900/50 border-t border-purple-500/20">
-        <div className="container mx-auto px-4 py-2 flex flex-wrap items-center justify-between text-xs sm:text-sm gap-2">
-          <div className="flex items-center space-x-3 sm:space-x-4">
-            <a href="tel:+917489635343" className="hover:text-orange-400 transition-colors duration-300">
-              📞 +91-7489635343
-            </a>
-            <a href="mailto:info@trucksuvidha.com" className="hover:text-pink-400 transition-colors duration-300 hidden sm:inline">
-              ✉️ info@trucksuvidha.com
-            </a>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <span className="text-xs text-purple-300 hidden md:inline">FOLLOW US:</span>
-            <a href="#" className="hover:text-blue-400 transition-colors duration-300">FB</a>
-            <a href="#" className="hover:text-cyan-400 transition-colors duration-300">X</a>
-            <a href="#" className="hover:text-pink-400 transition-colors duration-300">IN</a>
-          </div>
-        </div>
-      </div>
+
     </nav>
   );
 }
