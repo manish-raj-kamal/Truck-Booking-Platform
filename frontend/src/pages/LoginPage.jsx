@@ -138,19 +138,19 @@ export default function LoginPage() {
         {/* Login Form Section */}
         <div className="w-full max-w-md mx-auto">
           {/* Logo/Brand */}
-          <div className="text-center mb-6 sm:mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-indigo-600 rounded-full mb-3 sm:mb-4 shadow-lg">
-              <svg className="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center mb-4 sm:mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-indigo-600 rounded-full mb-3 shadow-lg">
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">TruckSuvidha</h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-2">Welcome back! Please login to your account</p>
+            <h1 className="text-2xl font-bold text-gray-900">TruckSuvidha</h1>
+            <p className="text-sm text-gray-600 mt-1">Welcome back! Please login to your account</p>
           </div>
 
           {/* Login Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Login</h2>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Login</h2>
 
             {error && (
               <div className="mb-4 p-3 sm:p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-start text-sm">
@@ -161,10 +161,10 @@ export default function LoginPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Input */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
@@ -179,7 +179,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out text-base"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out text-sm"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -187,7 +187,7 @@ export default function LoginPage() {
 
               {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -202,7 +202,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out text-base"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out text-sm"
                     placeholder="••••••••"
                   />
                 </div>
@@ -229,7 +229,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out active:scale-[0.98]"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out active:scale-[0.98]"
               >
                 {loading ? (
                   <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -243,7 +243,7 @@ export default function LoginPage() {
             </form>
 
             {/* Divider */}
-            <div className="mt-5 sm:mt-6">
+            <div className="mt-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
@@ -258,7 +258,7 @@ export default function LoginPage() {
             <div className="mt-4">
               <a
                 href="/auth/google"
-                className="w-full flex items-center justify-center gap-3 py-2.5 sm:py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm sm:text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-3 py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out active:scale-[0.98]"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
@@ -283,7 +283,7 @@ export default function LoginPage() {
             </div>
 
             {/* Sign Up Link */}
-            <div className="mt-5 sm:mt-6">
+            <div className="mt-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
@@ -292,10 +292,10 @@ export default function LoginPage() {
                   <span className="px-2 bg-white text-gray-500">Don't have an account?</span>
                 </div>
               </div>
-              <div className="mt-4 sm:mt-6">
+              <div className="mt-4">
                 <Link
                   to="/register"
-                  className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-indigo-600 rounded-lg shadow-sm text-sm sm:text-base font-medium text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out active:scale-[0.98]"
+                  className="w-full flex justify-center py-2 px-4 border border-indigo-600 rounded-lg shadow-sm text-sm font-medium text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out active:scale-[0.98]"
                 >
                   Create new account
                 </Link>
@@ -304,7 +304,7 @@ export default function LoginPage() {
           </div>
 
           {/* Footer */}
-          <p className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-600">
+          <p className="mt-4 text-center text-xs text-gray-600">
             © 2025 TruckSuvidha. All rights reserved.
           </p>
         </div>

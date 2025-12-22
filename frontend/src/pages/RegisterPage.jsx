@@ -246,19 +246,19 @@ export default function RegisterPage() {
         {/* Register Form Section */}
         <div className="max-w-md w-full mx-auto order-1 lg:order-2">
           {/* Logo/Brand */}
-          <div className="text-center mb-6 sm:mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-purple-600 rounded-full mb-3 sm:mb-4">
-              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center mb-4 sm:mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-purple-600 rounded-full mb-3">
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Join Truck Booking</h1>
-            <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Create your account to get started</p>
+            <h1 className="text-2xl font-bold text-gray-900">Join Truck Booking</h1>
+            <p className="text-gray-600 mt-1 text-sm">Create your account to get started</p>
           </div>
 
           {/* Register Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Sign Up</h2>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-5 sm:p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Sign Up</h2>
 
             {error && (
               <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-start">
@@ -269,10 +269,10 @@ export default function RegisterPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Full Name
                 </label>
                 <div className="relative">
@@ -286,7 +286,7 @@ export default function RegisterPage() {
                     type="text"
                     value={name}
                     onChange={e => setName(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-base"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-sm"
                     placeholder="John Doe"
                   />
                 </div>
@@ -294,7 +294,7 @@ export default function RegisterPage() {
 
               {/* Email Input */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
@@ -309,7 +309,7 @@ export default function RegisterPage() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-base"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-sm"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -317,7 +317,7 @@ export default function RegisterPage() {
 
               {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -333,7 +333,7 @@ export default function RegisterPage() {
                     onChange={e => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="block w-full pl-10 pr-3 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-base"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-sm"
                     placeholder="••••••••"
                   />
                 </div>
@@ -364,7 +364,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150 ease-in-out"
               >
                 {loading ? (
                   <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -378,7 +378,7 @@ export default function RegisterPage() {
             </form>
 
             {/* Divider */}
-            <div className="mt-5 sm:mt-6">
+            <div className="mt-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
@@ -393,7 +393,7 @@ export default function RegisterPage() {
             <div className="mt-4">
               <a
                 href="/auth/google"
-                className="w-full flex items-center justify-center gap-3 py-2.5 sm:py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm sm:text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-3 py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out active:scale-[0.98]"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
@@ -417,8 +417,7 @@ export default function RegisterPage() {
               </a>
             </div>
 
-            {/* Login Link */}
-            <div className="mt-4 sm:mt-6">
+            <div className="mt-4">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300"></div>
@@ -427,10 +426,10 @@ export default function RegisterPage() {
                   <span className="px-2 bg-white text-gray-500">Already have an account?</span>
                 </div>
               </div>
-              <div className="mt-4 sm:mt-6">
+              <div className="mt-4">
                 <Link
                   to="/login"
-                  className="w-full flex justify-center py-2.5 sm:py-3 px-4 border border-purple-600 rounded-lg shadow-sm text-sm sm:text-base font-medium text-purple-600 bg-white hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out"
+                  className="w-full flex justify-center py-2 px-4 border border-purple-600 rounded-lg shadow-sm text-sm font-medium text-purple-600 bg-white hover:bg-purple-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out"
                 >
                   Sign in instead
                 </Link>
@@ -439,7 +438,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Footer */}
-          <p className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-600">
+          <p className="mt-4 text-center text-xs text-gray-600">
             © 2025 Truck Booking. All rights reserved.
           </p>
         </div>
