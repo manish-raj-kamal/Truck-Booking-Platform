@@ -30,7 +30,26 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center px-3 sm:px-4 py-4 sm:py-6 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-3 sm:px-4 py-4 sm:py-6 relative overflow-hidden">
+      {/* Animated Gradient Mesh Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-pink-100 to-indigo-100 animate-gradient-slow" />
+
+      {/* Floating Gradient Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-purple-400/30 to-pink-500/30 rounded-full blur-3xl animate-float-orb" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-indigo-400/30 to-purple-500/30 rounded-full blur-3xl animate-float-orb-reverse" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-pink-300/20 to-purple-400/20 rounded-full blur-3xl animate-pulse-slow" />
+      </div>
+
+      {/* Dot Pattern Overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `radial-gradient(circle, #9333EA 1px, transparent 1px)`,
+          backgroundSize: '24px 24px'
+        }}
+      />
+
       {/* 3D Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden sm:block">
         {/* Moving Delivery Trucks */}
@@ -256,8 +275,8 @@ export default function RegisterPage() {
             <p className="text-gray-600 mt-1 text-xs sm:text-sm">Create your account to get started</p>
           </div>
 
-          {/* Register Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5">
+          {/* Register Card with Glassmorphism */}
+          <div className="glass-card rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 animate-glow-purple">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">Sign Up</h2>
 
             {error && (

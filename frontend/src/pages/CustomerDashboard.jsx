@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function CustomerDashboard() {
   const [loads, setLoads] = useState([]);
   const [myLoads, setMyLoads] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -18,6 +20,7 @@ export default function CustomerDashboard() {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const loadsRes = await axios.get('/api/loads');
       // For non-customers, show all loads
       if (canSeeAllLoads) {
@@ -31,8 +34,20 @@ export default function CustomerDashboard() {
       }));
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <LoadingSpinner
+          message="Loading your dashboard..."
+          size="lg"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">

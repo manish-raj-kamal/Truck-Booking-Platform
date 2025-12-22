@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalLoads: 0,
     totalTrucks: 0,
@@ -20,6 +22,7 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
+      setLoading(true);
       const [loadsRes, trucksRes, usersRes] = await Promise.all([
         axios.get('/api/loads'),
         axios.get('/api/trucks'),
@@ -34,8 +37,20 @@ export default function AdminDashboard() {
       });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+    } finally {
+      setLoading(false);
     }
   };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <LoadingSpinner
+          message="Loading admin dashboard..."
+          size="lg"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -198,8 +213,8 @@ export default function AdminDashboard() {
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs text-gray-500">#{idx + 1}</span>
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${load.status === 'open' ? 'bg-green-100 text-green-800' :
-                        load.status === 'assigned' ? 'bg-blue-100 text-blue-800' :
-                          'bg-gray-100 text-gray-800'
+                      load.status === 'assigned' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
                       }`}>
                       {load.status}
                     </span>
@@ -238,8 +253,8 @@ export default function AdminDashboard() {
                     <td className="px-4 xl:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{load.material}</td>
                     <td className="px-4 xl:px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${load.status === 'open' ? 'bg-green-100 text-green-800' :
-                          load.status === 'assigned' ? 'bg-blue-100 text-blue-800' :
-                            'bg-gray-100 text-gray-800'
+                        load.status === 'assigned' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
                         }`}>
                         {load.status}
                       </span>

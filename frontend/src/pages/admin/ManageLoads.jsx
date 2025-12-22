@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 export default function ManageLoads() {
   const [loads, setLoads] = useState([]);
@@ -111,8 +112,8 @@ export default function ManageLoads() {
             <button
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-lg font-semibold text-sm transition ${filter === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
             >
               All ({loads.length})
@@ -122,8 +123,8 @@ export default function ManageLoads() {
                 key={status}
                 onClick={() => setFilter(status)}
                 className={`px-3 py-2 rounded-lg font-semibold text-sm transition capitalize whitespace-nowrap ${filter === status
-                    ? getStatusColor(status) + ' border-2'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? getStatusColor(status) + ' border-2'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
                 {status.replace('_', ' ')} ({statusCounts[status] || 0})
@@ -134,13 +135,10 @@ export default function ManageLoads() {
 
         {/* Loading State */}
         {loading ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <svg className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-4" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-            </svg>
-            <p className="text-gray-600">Loading loads...</p>
-          </div>
+          <LoadingSpinner
+            message="Loading all loads..."
+            size="lg"
+          />
         ) : (
           <>
             {/* Mobile Card View */}

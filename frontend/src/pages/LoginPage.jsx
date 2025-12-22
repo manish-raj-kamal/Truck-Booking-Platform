@@ -27,7 +27,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 py-4 sm:py-6 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 py-4 sm:py-6 relative overflow-hidden">
+      {/* Animated Gradient Mesh Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-100 animate-gradient-slow" />
+
+      {/* Floating Gradient Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-indigo-500/30 rounded-full blur-3xl animate-float-orb" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-purple-400/30 to-pink-500/30 rounded-full blur-3xl animate-float-orb-reverse" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-indigo-300/20 to-blue-400/20 rounded-full blur-3xl animate-pulse-slow" />
+      </div>
+
+      {/* Dot Pattern Overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `radial-gradient(circle, #4F46E5 1px, transparent 1px)`,
+          backgroundSize: '24px 24px'
+        }}
+      />
+
       {/* 3D Animated Background Elements - Hidden on very small screens for performance */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden sm:block">
         {/* Moving Trucks */}
@@ -148,8 +167,8 @@ export default function LoginPage() {
             <p className="text-xs sm:text-sm text-gray-600 mt-1">Welcome back! Please login to your account</p>
           </div>
 
-          {/* Login Card */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5">
+          {/* Login Card with Glassmorphism */}
+          <div className="glass-card rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-5 animate-glow">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">Login</h2>
 
             {error && (

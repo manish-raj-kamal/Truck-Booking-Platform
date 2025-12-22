@@ -407,291 +407,401 @@ export default function ContactPage() {
         </div>
       )}
 
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-600 via-indigo-700 to-purple-800 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-yellow-400 rounded-full blur-3xl"></div>
+      {/* Hero Section - Interactive */}
+      <div className="relative bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white overflow-hidden min-h-[400px]">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          {/* Morphing Blobs */}
+          <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-br from-yellow-400/30 to-orange-500/30 rounded-full blur-3xl animate-morph"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-br from-blue-400/30 to-cyan-500/30 rounded-full blur-3xl animate-morph" style={{ animationDelay: '-4s' }}></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-pink-400/20 to-purple-500/20 rounded-full blur-2xl animate-morph" style={{ animationDelay: '-2s' }}></div>
+
+          {/* Floating Icons */}
+          <div className="absolute top-20 left-[15%] text-4xl animate-float-orb opacity-60">📞</div>
+          <div className="absolute top-32 right-[20%] text-3xl animate-float-orb opacity-60" style={{ animationDelay: '-2s' }}>✉️</div>
+          <div className="absolute bottom-20 left-[25%] text-4xl animate-float-orb opacity-60" style={{ animationDelay: '-4s' }}>💬</div>
+          <div className="absolute bottom-32 right-[15%] text-3xl animate-float-orb opacity-60" style={{ animationDelay: '-1s' }}>🚚</div>
         </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-              Get in <span className="text-yellow-400">Touch</span>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-32 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6 animate-float-label">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-ping-slow"></span>
+              <span className="text-sm font-medium">We're online and ready to help!</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
+              Let's <span className="text-yellow-300 animate-heartbeat inline-block cursor-pointer">Connect</span>
             </h1>
-            <p className="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto">
-              Have questions about our services? We're here to help! Reach out to us through any of the channels below.
+
+            <p className="text-xl sm:text-2xl text-white/90 max-w-2xl mx-auto mb-8">
+              Have a question? Click any card below to reach us instantly. We love hearing from you!
             </p>
+
+            {/* Quick Action Buttons */}
+            <div className="flex flex-wrap justify-center gap-4">
+              <a
+                href={`tel:${contactInfo?.phone}`}
+                className="group flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-6 py-3 rounded-full font-semibold transition-all duration-300 magnetic-hover animate-bounce-click"
+              >
+                <span className="text-2xl group-hover:animate-wiggle">📞</span>
+                Call Now
+              </a>
+              <a
+                href={`https://wa.me/${contactInfo?.whatsapp?.replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2 bg-green-500/80 hover:bg-green-500 backdrop-blur-sm px-6 py-3 rounded-full font-semibold transition-all duration-300 magnetic-hover animate-bounce-click"
+              >
+                <span className="text-2xl group-hover:animate-wiggle">💬</span>
+                WhatsApp
+              </a>
+              <a
+                href={`mailto:${contactInfo?.email}`}
+                className="group flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-6 py-3 rounded-full font-semibold transition-all duration-300 magnetic-hover animate-bounce-click"
+              >
+                <span className="text-2xl group-hover:animate-wiggle">✉️</span>
+                Email Us
+              </a>
+            </div>
           </div>
+        </div>
+
+        {/* Wave Divider */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" fillOpacity="0.1" />
+            <path d="M0 120L60 112.5C120 105 240 90 360 82.5C480 75 600 75 720 80C840 85 960 95 1080 97.5C1200 100 1320 95 1380 92.5L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="rgb(249 250 251)" />
+          </svg>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 -mt-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16">
 
           {/* Contact Information */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Contact Information</h2>
-              <p className="text-gray-600 mb-8">
-                Fill out the form and our team will get back to you within 24 hours.
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+                Reach Out <span className="text-indigo-600">Anytime</span> 👋
+              </h2>
+              <p className="text-lg text-gray-600">
+                Click on any card to connect with us instantly!
               </p>
             </div>
 
-            {/* Contact Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Contact Cards - Interactive */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* Phone Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition group">
-                <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
+              <a
+                href={`tel:${contactInfo?.phone}`}
+                className="group bg-gradient-to-br from-white to-green-50 rounded-2xl p-6 shadow-lg magnetic-hover glow-hover tilt-3d cursor-pointer border-2 border-transparent hover:border-green-200 animate-bounce-click"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <span className="text-3xl group-hover:animate-wiggle">📞</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-green-600 transition-colors">Call Us</h3>
+                    <p className="text-gray-500 text-sm mb-2">{contactInfo?.phoneHours}</p>
+                    <p className="text-green-600 font-bold text-lg">{contactInfo?.phone}</p>
+                  </div>
                 </div>
-                <h3 className="font-bold text-gray-800 mb-1">Phone</h3>
-                <p className="text-gray-600 text-sm mb-2">{contactInfo?.phoneHours}</p>
-                <a href={`tel:${contactInfo?.phone}`} className="text-blue-600 font-semibold hover:text-blue-700 transition">
-                  {contactInfo?.phone}
-                </a>
-              </div>
+                <div className="mt-4 flex items-center text-sm text-green-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>Tap to call</span>
+                  <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+              </a>
 
               {/* Email Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition group">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
+              <a
+                href={`mailto:${contactInfo?.email}`}
+                className="group bg-gradient-to-br from-white to-blue-50 rounded-2xl p-6 shadow-lg magnetic-hover glow-hover tilt-3d cursor-pointer border-2 border-transparent hover:border-blue-200 animate-bounce-click"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <span className="text-3xl group-hover:animate-wiggle">✉️</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-blue-600 transition-colors">Email Us</h3>
+                    <p className="text-gray-500 text-sm mb-2">{contactInfo?.emailResponseTime}</p>
+                    <p className="text-blue-600 font-bold break-all">{contactInfo?.email}</p>
+                  </div>
                 </div>
-                <h3 className="font-bold text-gray-800 mb-1">Email</h3>
-                <p className="text-gray-600 text-sm mb-2">{contactInfo?.emailResponseTime}</p>
-                <a href={`mailto:${contactInfo?.email}`} className="text-blue-600 font-semibold hover:text-blue-700 transition">
-                  {contactInfo?.email}
-                </a>
-              </div>
+                <div className="mt-4 flex items-center text-sm text-blue-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>Send email</span>
+                  <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+              </a>
 
               {/* Location Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition group">
-                <div className="w-14 h-14 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+              <div className="group bg-gradient-to-br from-white to-red-50 rounded-2xl p-6 shadow-lg magnetic-hover tilt-3d cursor-pointer border-2 border-transparent hover:border-red-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-400 to-rose-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <span className="text-3xl group-hover:animate-wiggle">📍</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-red-600 transition-colors">Visit Us</h3>
+                    <p className="text-gray-500 text-sm mb-2">Our office location</p>
+                    <p className="text-red-600 font-bold">{contactInfo?.address}</p>
+                  </div>
                 </div>
-                <h3 className="font-bold text-gray-800 mb-1">Office</h3>
-                <p className="text-gray-600 text-sm mb-2">Visit our office</p>
-                <p className="text-blue-600 font-semibold">{contactInfo?.address}</p>
+                <div className="mt-4 flex items-center text-sm text-red-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>View on map ↓</span>
+                </div>
               </div>
 
               {/* WhatsApp Card */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition group">
-                <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                  {SocialIcons.whatsapp}
+              <a
+                href={`https://wa.me/${contactInfo?.whatsapp?.replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group bg-gradient-to-br from-white to-emerald-50 rounded-2xl p-6 shadow-lg magnetic-hover glow-hover tilt-3d cursor-pointer border-2 border-transparent hover:border-emerald-300 animate-bounce-click relative overflow-hidden"
+              >
+                {/* Animated pulse ring */}
+                <div className="absolute top-4 right-4 w-3 h-3">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping-slow"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </div>
-                <h3 className="font-bold text-gray-800 mb-1">WhatsApp</h3>
-                <p className="text-gray-600 text-sm mb-2">Quick responses</p>
-                <a href={`https://wa.me/${contactInfo?.whatsapp?.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-semibold hover:text-blue-700 transition">
-                  Chat with us
-                </a>
-              </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-700 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <span className="text-3xl group-hover:animate-wiggle">💬</span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 text-lg mb-1 group-hover:text-emerald-600 transition-colors">WhatsApp</h3>
+                    <p className="text-gray-500 text-sm mb-2">Instant replies!</p>
+                    <p className="text-emerald-600 font-bold">Chat with us</p>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center text-sm text-emerald-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>Open WhatsApp</span>
+                  <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+              </a>
             </div>
 
-            {/* Social Media */}
+            {/* Social Media - Interactive */}
             {socialLinks.length > 0 && (
-              <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Connect With Us</h3>
-                <div className="flex flex-wrap gap-3">
+              <div className="bg-gradient-to-br from-white to-purple-50 rounded-2xl p-6 sm:p-8 shadow-lg border-2 border-purple-100">
+                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">🌐</span>
+                  Connect With Us
+                </h3>
+                <div className="flex flex-wrap gap-4">
                   {socialLinks.map((link) => (
                     <a
                       key={link._id}
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`w-12 h-12 ${getIconBgColor(link.icon)} rounded-xl flex items-center justify-center text-white transition-all duration-300 hover:scale-110 hover:shadow-lg`}
+                      className={`group w-14 h-14 ${getIconBgColor(link.icon)} rounded-2xl flex items-center justify-center text-white transition-all duration-300 magnetic-hover animate-bounce-click shadow-lg hover:shadow-xl`}
                       title={link.platform}
                     >
-                      {SocialIcons[link.icon] || SocialIcons.link}
+                      <span className="group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300">
+                        {SocialIcons[link.icon] || SocialIcons.link}
+                      </span>
                     </a>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Business Hours */}
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 sm:p-8 text-white shadow-lg">
-              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            {/* Business Hours - Interactive */}
+            <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 sm:p-8 text-white shadow-xl magnetic-hover relative overflow-hidden">
+              {/* Animated background dots */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-4 left-4 w-2 h-2 bg-white rounded-full animate-ping-slow"></div>
+                <div className="absolute bottom-8 right-8 w-3 h-3 bg-white rounded-full animate-ping-slow" style={{ animationDelay: '-1s' }}></div>
+                <div className="absolute top-1/2 right-4 w-2 h-2 bg-white rounded-full animate-ping-slow" style={{ animationDelay: '-0.5s' }}></div>
+              </div>
+
+              <h3 className="text-xl font-bold mb-6 flex items-center gap-3 relative">
+                <span className="text-3xl animate-float-label">⏰</span>
                 Business Hours
               </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-100">Monday - Friday</span>
-                  <span className="font-semibold">{contactInfo?.businessHours?.weekdays}</span>
+              <div className="space-y-4 relative">
+                <div className="flex justify-between items-center p-3 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-colors cursor-default">
+                  <span className="text-white/90 flex items-center gap-2">
+                    <span>📅</span> Monday - Friday
+                  </span>
+                  <span className="font-bold bg-white/20 px-3 py-1 rounded-full">{contactInfo?.businessHours?.weekdays}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-100">Saturday</span>
-                  <span className="font-semibold">{contactInfo?.businessHours?.saturday}</span>
+                <div className="flex justify-between items-center p-3 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-colors cursor-default">
+                  <span className="text-white/90 flex items-center gap-2">
+                    <span>📅</span> Saturday
+                  </span>
+                  <span className="font-bold bg-white/20 px-3 py-1 rounded-full">{contactInfo?.businessHours?.saturday}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-100">Sunday</span>
-                  <span className="font-semibold text-yellow-400">{contactInfo?.businessHours?.sunday}</span>
+                <div className="flex justify-between items-center p-3 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-colors cursor-default">
+                  <span className="text-white/90 flex items-center gap-2">
+                    <span>😴</span> Sunday
+                  </span>
+                  <span className="font-bold bg-yellow-400 text-gray-900 px-3 py-1 rounded-full">{contactInfo?.businessHours?.sunday}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="bg-white rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Send us a Message</h2>
-            <p className="text-gray-600 mb-8">We'd love to hear from you.</p>
+          {/* Contact Form - Interactive */}
+          <div className="bg-gradient-to-br from-white to-indigo-50 rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border-2 border-indigo-100 relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200/40 to-purple-200/40 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-br from-pink-200/40 to-orange-200/40 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
 
-            {submitted && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-green-800">Message Sent!</h4>
-                  <p className="text-sm text-green-600">We'll get back to you within 24 hours.</p>
-                </div>
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-3xl">💌</span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800">Send us a Message</h2>
               </div>
-            )}
+              <p className="text-gray-600 mb-8 ml-12">We'd love to hear from you. Drop us a line!</p>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {submitted && (
+                <div className="mb-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl flex items-center gap-4 animate-fadeIn">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <span className="text-2xl">✅</span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-green-800 text-lg">Message Sent Successfully!</h4>
+                    <p className="text-sm text-green-600">We'll get back to you within 24 hours. 🚀</p>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                      placeholder="john@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                      placeholder="+91 98765 43210"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
+                    <select
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    >
+                      <option value="">Select a topic</option>
+                      <option value="general">General Inquiry</option>
+                      <option value="booking">Truck Booking</option>
+                      <option value="load">Load Posting</option>
+                      <option value="support">Technical Support</option>
+                      <option value="partnership">Partnership</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="John Doe"
+                    rows={5}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
+                    placeholder="Tell us how we can help you..."
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="john@example.com"
-                  />
-                </div>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="+91 98765 43210"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
-                  <select
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  >
-                    <option value="">Select a topic</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="booking">Truck Booking</option>
-                    <option value="load">Load Posting</option>
-                    <option value="support">Technical Support</option>
-                    <option value="partnership">Partnership</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
-                  placeholder="Tell us how we can help you..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition transform ${isSubmitting
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition transform ${isSubmitting
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] active:scale-[0.98]'
-                  } text-white shadow-lg`}
-              >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </button>
-            </form>
+                    } text-white shadow-lg`}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Map Section */}
-      <div className="bg-white py-12 sm:py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Find Us</h2>
-            <p className="text-gray-600">Visit our office or get directions</p>
-          </div>
-          <div className="rounded-2xl overflow-hidden shadow-xl h-64 sm:h-80 lg:h-96 bg-gray-200">
-            <iframe
-              src={contactInfo?.mapUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d235526.94105022807!2d75.69903556640625!3d22.72423!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fcad1b410ddb%3A0x96ec4da356240f4!2sIndore%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1701456000000!5m2!1sen!2sin"}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Office Location"
-            ></iframe>
-          </div>
-        </div>
-      </div>
-
-      {/* FAQ Section */}
-      {contactInfo?.faqs?.length > 0 && (
-        <div className="bg-gradient-to-br from-gray-50 to-blue-50 py-12 sm:py-16">
+        {/* Map Section */}
+        <div className="bg-white py-12 sm:py-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Frequently Asked Questions</h2>
-              <p className="text-gray-600">Quick answers to common questions</p>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Find Us</h2>
+              <p className="text-gray-600">Visit our office or get directions</p>
             </div>
-            <div className="max-w-3xl mx-auto space-y-4">
-              {contactInfo.faqs.map((faq, idx) => (
-                <div key={idx} className="bg-white rounded-xl p-5 sm:p-6 shadow-md hover:shadow-lg transition">
-                  <h3 className="font-bold text-gray-800 mb-2 flex items-start gap-3">
-                    <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-0.5">?</span>
-                    {faq.question}
-                  </h3>
-                  <p className="text-gray-600 ml-9">{faq.answer}</p>
-                </div>
-              ))}
+            <div className="rounded-2xl overflow-hidden shadow-xl h-64 sm:h-80 lg:h-96 bg-gray-200">
+              <iframe
+                src={contactInfo?.mapUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d235526.94105022807!2d75.69903556640625!3d22.72423!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fcad1b410ddb%3A0x96ec4da356240f4!2sIndore%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1701456000000!5m2!1sen!2sin"}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Office Location"
+              ></iframe>
             </div>
           </div>
         </div>
-      )}
+
+        {/* FAQ Section */}
+        {contactInfo?.faqs?.length > 0 && (
+          <div className="bg-gradient-to-br from-gray-50 to-blue-50 py-12 sm:py-16">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center mb-10">
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3">Frequently Asked Questions</h2>
+                <p className="text-gray-600">Quick answers to common questions</p>
+              </div>
+              <div className="max-w-3xl mx-auto space-y-4">
+                {contactInfo.faqs.map((faq, idx) => (
+                  <div key={idx} className="bg-white rounded-xl p-5 sm:p-6 shadow-md hover:shadow-lg transition">
+                    <h3 className="font-bold text-gray-800 mb-2 flex items-start gap-3">
+                      <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm flex-shrink-0 mt-0.5">?</span>
+                      {faq.question}
+                    </h3>
+                    <p className="text-gray-600 ml-9">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

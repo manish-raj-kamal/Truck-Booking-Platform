@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function TruckBoardPage() {
   const { user } = useAuth();
   const [trucks, setTrucks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     sourceCity: '',
     destinationCity: '',
@@ -55,10 +57,13 @@ export default function TruckBoardPage() {
 
   const fetchTrucks = async () => {
     try {
+      setLoading(true);
       const res = await axios.get('/api/trucks');
       setTrucks(res.data);
     } catch (error) {
       console.error('Error fetching trucks:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,6 +77,16 @@ export default function TruckBoardPage() {
       (!filters.minCapacity || parseFloat(truck.capacityWeight) >= parseFloat(filters.minCapacity))
     );
   });
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 flex items-center justify-center">
+        <LoadingSpinner
+          message="Loading available trucks..."
+          size="lg"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50">
@@ -80,7 +95,7 @@ export default function TruckBoardPage() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-3 flex items-center">
             <svg className="w-10 h-10 mr-3 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+              <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
             </svg>
             Truck Board - Available Vehicles
           </h1>
@@ -91,7 +106,7 @@ export default function TruckBoardPage() {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
             <svg className="w-6 h-6 mr-2 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+              <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
             </svg>
             Filter Trucks
           </h2>
@@ -146,14 +161,13 @@ export default function TruckBoardPage() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="bg-green-100 p-3 rounded-full">
                     <svg className="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                      <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
                     </svg>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    truck.status === 'available' 
-                      ? 'bg-green-100 text-green-800' 
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${truck.status === 'available'
+                      ? 'bg-green-100 text-green-800'
                       : 'bg-red-100 text-red-800'
-                  }`}>
+                    }`}>
                     {truck.status || 'Available'}
                   </span>
                 </div>
@@ -185,7 +199,7 @@ export default function TruckBoardPage() {
           ) : (
             <div className="col-span-full bg-white rounded-xl shadow-lg p-12 text-center">
               <svg className="w-24 h-24 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+                <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
               </svg>
               <h3 className="text-2xl font-bold text-gray-700 mb-2">No Trucks Available</h3>
               <p className="text-gray-500">Try adjusting your filters or check back later</p>
