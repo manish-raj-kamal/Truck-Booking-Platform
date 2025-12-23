@@ -393,16 +393,16 @@ export default function LandingPage() {
             {/* 3D Floating stats preview */}
             <div className="mt-10 sm:mt-14 flex flex-wrap justify-center gap-4 sm:gap-6">
               <div className="glass-card px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transform hover:scale-110 transition-transform cursor-default">
-                <span className="text-2xl sm:text-3xl font-bold text-yellow-400">56K+</span>
-                <span className="text-xs sm:text-sm text-blue-100 ml-2">Transporters</span>
+                <span className="text-2xl sm:text-3xl font-bold text-yellow-600">56K+</span>
+                <span className="text-xs sm:text-sm text-blue-800 ml-2">Transporters</span>
               </div>
               <div className="glass-card px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transform hover:scale-110 transition-transform cursor-default">
-                <span className="text-2xl sm:text-3xl font-bold text-green-400">100K+</span>
-                <span className="text-xs sm:text-sm text-blue-100 ml-2">Loads Delivered</span>
+                <span className="text-2xl sm:text-3xl font-bold text-green-600">100K+</span>
+                <span className="text-xs sm:text-sm text-blue-800 ml-2">Loads Delivered</span>
               </div>
               <div className="glass-card px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transform hover:scale-110 transition-transform cursor-default">
-                <span className="text-2xl sm:text-3xl font-bold text-pink-400">500+</span>
-                <span className="text-xs sm:text-sm text-blue-100 ml-2">Cities</span>
+                <span className="text-2xl sm:text-3xl font-bold text-pink-600">500+</span>
+                <span className="text-xs sm:text-sm text-blue-800 ml-2">Cities</span>
               </div>
             </div>
           </div>

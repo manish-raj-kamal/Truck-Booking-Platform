@@ -12,9 +12,34 @@ export default function RegisterPage() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Password validation
+  const passwordValidation = {
+    minLength: password.length >= 8,
+    hasUppercase: /[A-Z]/.test(password),
+    hasLowercase: /[a-z]/.test(password),
+    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+  };
+  const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+
+  // Email validation
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+
+    // Validate email
+    if (!isEmailValid) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // Validate password
+    if (!isPasswordValid) {
+      setError('Please meet all password requirements');
+      return;
+    }
+
     setLoading(true);
     try {
       await api.post('/api/auth/register', { email, password, name });
@@ -328,10 +353,28 @@ export default function RegisterPage() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-sm"
+                    className={`block w-full pl-10 pr-3 py-1.5 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-sm ${email && !isEmailValid ? 'border-red-300 bg-red-50' : email && isEmailValid ? 'border-green-300 bg-green-50' : 'border-gray-300'
+                      }`}
                     placeholder="you@example.com"
                   />
+                  {email && !isEmailValid && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      <svg className="h-4 w-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  )}
+                  {email && isEmailValid && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      <svg className="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
+                {email && !isEmailValid && (
+                  <p className="mt-1 text-xs text-red-500">Please enter a valid email address</p>
+                )}
               </div>
 
               {/* Password Input */}
@@ -351,12 +394,74 @@ export default function RegisterPage() {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     required
-                    minLength={6}
-                    className="block w-full pl-10 pr-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-sm"
+                    className={`block w-full pl-10 pr-3 py-1.5 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-150 ease-in-out text-sm ${password && !isPasswordValid ? 'border-amber-300 bg-amber-50' : password && isPasswordValid ? 'border-green-300 bg-green-50' : 'border-gray-300'
+                      }`}
                     placeholder="••••••••"
                   />
+                  {password && isPasswordValid && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      <svg className="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
-                <p className="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
+                {/* Password Requirements */}
+                {password && (
+                  <div className="mt-2 p-2 bg-gray-50 rounded-lg border border-gray-100">
+                    <p className="text-xs font-medium text-gray-600 mb-1.5">Password must have:</p>
+                    <div className="grid grid-cols-2 gap-1">
+                      <div className={`flex items-center gap-1.5 text-xs ${passwordValidation.minLength ? 'text-green-600' : 'text-gray-400'}`}>
+                        {passwordValidation.minLength ? (
+                          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                          </svg>
+                        )}
+                        8+ characters
+                      </div>
+                      <div className={`flex items-center gap-1.5 text-xs ${passwordValidation.hasUppercase ? 'text-green-600' : 'text-gray-400'}`}>
+                        {passwordValidation.hasUppercase ? (
+                          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                          </svg>
+                        )}
+                        Uppercase letter
+                      </div>
+                      <div className={`flex items-center gap-1.5 text-xs ${passwordValidation.hasLowercase ? 'text-green-600' : 'text-gray-400'}`}>
+                        {passwordValidation.hasLowercase ? (
+                          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                          </svg>
+                        )}
+                        Lowercase letter
+                      </div>
+                      <div className={`flex items-center gap-1.5 text-xs ${passwordValidation.hasSpecialChar ? 'text-green-600' : 'text-gray-400'}`}>
+                        {passwordValidation.hasSpecialChar ? (
+                          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                          </svg>
+                        )}
+                        Special character
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Terms Checkbox */}

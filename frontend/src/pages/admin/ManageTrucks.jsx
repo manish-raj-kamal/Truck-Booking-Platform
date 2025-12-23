@@ -3,6 +3,7 @@ import axios from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import ImageCropper from '../../components/ImageCropper';
 
 export default function ManageTrucks() {
   const [trucks, setTrucks] = useState([]);
@@ -15,12 +16,26 @@ export default function ManageTrucks() {
     truckSize: '',
     gpsAvailable: false,
     truckPhoto: '',
+    currentState: '',
+    currentCity: '',
     status: 'available'
   });
   const [photoPreview, setPhotoPreview] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showImageCropper, setShowImageCropper] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Indian States and Union Territories
+  const indianStates = [
+    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+    'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+    'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
+    'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+    'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+  ];
 
   useEffect(() => {
     // Check if user is admin or superadmin
@@ -46,16 +61,24 @@ export default function ManageTrucks() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Prepare data with combined location
+      const submitData = {
+        ...formData,
+        currentLocation: formData.currentCity && formData.currentState
+          ? `${formData.currentCity}, ${formData.currentState}`
+          : formData.currentCity || formData.currentState || ''
+      };
+
       if (editingTruck) {
-        await axios.put(`/api/trucks/${editingTruck._id}`, formData);
+        await axios.put(`/api/trucks/${editingTruck._id}`, submitData);
         alert('Truck updated successfully!');
       } else {
-        await axios.post('/api/trucks', formData);
+        await axios.post('/api/trucks', submitData);
         alert('Truck added successfully!');
       }
       setShowModal(false);
       setEditingTruck(null);
-      setFormData({ plateNumber: '', capacityWeight: '', model: '', truckSize: '', gpsAvailable: false, truckPhoto: '', status: 'available' });
+      setFormData({ plateNumber: '', capacityWeight: '', model: '', truckSize: '', gpsAvailable: false, truckPhoto: '', currentState: '', currentCity: '', status: 'available' });
       setPhotoPreview(null);
       fetchTrucks();
     } catch (error) {
@@ -73,27 +96,18 @@ export default function ManageTrucks() {
       truckSize: truck.truckSize || '',
       gpsAvailable: truck.gpsAvailable || false,
       truckPhoto: truck.truckPhoto || '',
+      currentState: truck.currentState || '',
+      currentCity: truck.currentCity || '',
       status: truck.status
     });
     setPhotoPreview(truck.truckPhoto || null);
     setShowModal(true);
   };
 
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Photo size must be less than 5MB');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        setFormData({ ...formData, truckPhoto: base64String });
-        setPhotoPreview(base64String);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleImageCropped = (compressedBase64) => {
+    setFormData({ ...formData, truckPhoto: compressedBase64 });
+    setPhotoPreview(compressedBase64);
+    setShowImageCropper(false);
   };
 
   const handleDelete = async (truckId) => {
@@ -130,7 +144,7 @@ export default function ManageTrucks() {
           <button
             onClick={() => {
               setEditingTruck(null);
-              setFormData({ plateNumber: '', capacityWeight: '', model: '', truckSize: '', gpsAvailable: false, truckPhoto: '', status: 'available' });
+              setFormData({ plateNumber: '', capacityWeight: '', model: '', truckSize: '', gpsAvailable: false, truckPhoto: '', currentState: '', currentCity: '', status: 'available' });
               setPhotoPreview(null);
               setShowModal(true);
             }}
@@ -422,39 +436,92 @@ export default function ManageTrucks() {
                   <p className="mt-1 text-xs text-gray-500">Indicate if this truck has GPS tracking</p>
                 </div>
 
+                {/* Current Location */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
+                    Current Location
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">State</label>
+                      <select
+                        value={formData.currentState}
+                        onChange={(e) => setFormData({ ...formData, currentState: e.target.value })}
+                        className="w-full px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="">Select State</option>
+                        {indianStates.map((state) => (
+                          <option key={state} value={state}>{state}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1">City</label>
+                      <input
+                        type="text"
+                        value={formData.currentCity}
+                        onChange={(e) => setFormData({ ...formData, currentCity: e.target.value })}
+                        placeholder="Enter city name"
+                        className="w-full px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      />
+                    </div>
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">Where is this truck currently located?</p>
+                </div>
+
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                     Truck Photo
                   </label>
                   <div className="space-y-2 sm:space-y-3">
-                    {photoPreview && (
-                      <div className="relative w-full h-32 sm:h-40 rounded-lg overflow-hidden border-2 border-gray-200">
+                    {photoPreview ? (
+                      <div className="relative w-full h-32 sm:h-40 rounded-xl overflow-hidden border-2 border-gray-200 group">
                         <img
                           src={photoPreview}
                           alt="Preview"
                           className="w-full h-full object-cover"
                         />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFormData({ ...formData, truckPhoto: '' });
-                            setPhotoPreview(null);
-                          }}
-                          className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 shadow-lg"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setShowImageCropper(true)}
+                            className="bg-white hover:bg-gray-100 text-gray-800 rounded-lg px-3 py-2 text-sm font-medium transition flex items-center gap-1"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Change
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFormData({ ...formData, truckPhoto: '' });
+                              setPhotoPreview(null);
+                            }}
+                            className="bg-red-500 hover:bg-red-600 text-white rounded-lg px-3 py-2 text-sm font-medium transition flex items-center gap-1"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Remove
+                          </button>
+                        </div>
                       </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setShowImageCropper(true)}
+                        className="w-full border-2 border-dashed border-gray-300 hover:border-blue-400 rounded-xl p-6 text-center transition group"
+                      >
+                        <div className="w-12 h-12 mx-auto mb-3 bg-blue-100 group-hover:bg-blue-200 rounded-xl flex items-center justify-center transition">
+                          <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <p className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition">Click to upload truck photo</p>
+                        <p className="text-xs text-gray-500 mt-1">Auto-compressed for fast upload</p>
+                      </button>
                     )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoChange}
-                      className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm file:mr-3 sm:file:mr-4 file:py-1.5 sm:file:py-2 file:px-3 sm:file:px-4 file:rounded-full file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
-                    <p className="text-xs text-gray-500">Upload truck photo (max 5MB)</p>
                   </div>
                 </div>
 
@@ -495,6 +562,14 @@ export default function ManageTrucks() {
               </form>
             </div>
           </div>
+        )}
+
+        {/* Image Cropper Modal */}
+        {showImageCropper && (
+          <ImageCropper
+            onImageCropped={handleImageCropped}
+            onCancel={() => setShowImageCropper(false)}
+          />
         )}
       </div>
     </div>

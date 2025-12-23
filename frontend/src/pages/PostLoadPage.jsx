@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import PaymentModal from '../components/PaymentModal';
+import { isValidEmail, isValidPhone } from '../utils/validation';
 
 export default function PostLoadPage() {
   const navigate = useNavigate();
@@ -75,6 +76,18 @@ export default function PostLoadPage() {
     // Validate required fields
     if (!formData.sourceCity || !formData.destinationCity || !formData.material || !formData.scheduledDate) {
       alert('Please fill in all required fields: Source City, Destination City, Material, and Scheduled Date');
+      return;
+    }
+
+    // Validate email if provided
+    if (formData.contactEmail && !isValidEmail(formData.contactEmail)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+
+    // Validate phone if provided
+    if (formData.contactPhone && !isValidPhone(formData.contactPhone)) {
+      alert('Please enter a valid phone number (10 digits)');
       return;
     }
 
@@ -153,8 +166,8 @@ export default function PostLoadPage() {
                 <div key={step.num} className="relative z-10 flex flex-col items-center">
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${currentStep >= step.num
-                        ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30'
-                        : 'bg-white/20 text-white/60'
+                      ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-gray-900 shadow-lg shadow-yellow-500/30'
+                      : 'bg-white/20 text-white/60'
                       }`}
                   >
                     {currentStep > step.num ? '✓' : step.icon}
@@ -192,8 +205,8 @@ export default function PostLoadPage() {
                       type="button"
                       onClick={() => setFormData({ ...formData, type: 'Full Load' })}
                       className={`relative p-5 rounded-2xl border-2 transition-all duration-300 ${formData.type === 'Full Load'
-                          ? 'border-blue-500 bg-blue-50 shadow-lg shadow-blue-500/20'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-blue-500 bg-blue-50 shadow-lg shadow-blue-500/20'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                     >
                       {formData.type === 'Full Load' && (
@@ -212,8 +225,8 @@ export default function PostLoadPage() {
                       type="button"
                       onClick={() => setFormData({ ...formData, type: 'Part Load' })}
                       className={`relative p-5 rounded-2xl border-2 transition-all duration-300 ${formData.type === 'Part Load'
-                          ? 'border-blue-500 bg-blue-50 shadow-lg shadow-blue-500/20'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-blue-500 bg-blue-50 shadow-lg shadow-blue-500/20'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                     >
                       {formData.type === 'Part Load' && (
@@ -519,9 +532,17 @@ export default function PostLoadPage() {
                         name="contactPhone"
                         value={formData.contactPhone}
                         onChange={handleChange}
-                        placeholder="+91 98765 43210"
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
+                        placeholder="9876543210"
+                        className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white ${formData.contactPhone && !isValidPhone(formData.contactPhone)
+                            ? 'border-red-300 bg-red-50'
+                            : formData.contactPhone && isValidPhone(formData.contactPhone)
+                              ? 'border-green-300 bg-green-50'
+                              : 'border-gray-200'
+                          }`}
                       />
+                      {formData.contactPhone && !isValidPhone(formData.contactPhone) && (
+                        <p className="text-xs text-red-500 mt-1">Enter valid 10-digit phone</p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-600 mb-2">Email</label>
@@ -531,8 +552,16 @@ export default function PostLoadPage() {
                         value={formData.contactEmail}
                         onChange={handleChange}
                         placeholder="your@email.com"
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white"
+                        className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition bg-white ${formData.contactEmail && !isValidEmail(formData.contactEmail)
+                            ? 'border-red-300 bg-red-50'
+                            : formData.contactEmail && isValidEmail(formData.contactEmail)
+                              ? 'border-green-300 bg-green-50'
+                              : 'border-gray-200'
+                          }`}
                       />
+                      {formData.contactEmail && !isValidEmail(formData.contactEmail) && (
+                        <p className="text-xs text-red-500 mt-1">Enter valid email</p>
+                      )}
                     </div>
                   </div>
                 </div>
