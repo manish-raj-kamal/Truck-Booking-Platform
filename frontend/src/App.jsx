@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop.jsx';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -53,6 +54,7 @@ function AppLayout() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       {!isLandingPage && <Navbar />}
       <main className="flex-grow">
         <AppRoutes />
