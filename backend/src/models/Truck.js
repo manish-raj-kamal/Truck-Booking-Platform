@@ -4,8 +4,8 @@ const truckSchema = new mongoose.Schema({
   plateNumber: { type: String, required: true, unique: true },
   model: { type: String },
   capacityWeight: { type: Number, required: true },
-  truckSize: { 
-    type: String, 
+  truckSize: {
+    type: String,
     enum: [
       'Tata Ace (ताटा ऐस)',
       '6 Wheel / 7 Ton (6 व्हील)',
@@ -24,10 +24,13 @@ const truckSchema = new mongoose.Schema({
     ]
   },
   gpsAvailable: { type: Boolean, default: false },
-  truckPhoto: { 
-    type: String, 
+  truckPhoto: {
+    type: String,
     default: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=400&h=300&fit=crop'
   },
+  currentState: { type: String },
+  currentCity: { type: String },
+  currentLocation: { type: String }, // Combined location for display
   status: { type: String, enum: ['available', 'in_use', 'maintenance'], default: 'available', index: true },
   createdAt: { type: Date, default: Date.now }
 });

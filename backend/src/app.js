@@ -12,6 +12,7 @@ import socialMediaRoutes from './routes/socialMediaRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import quoteRoutes from './routes/quoteRoutes.js';
+import otpRoutes from './routes/otpRoutes.js';
 
 const app = express();
 
@@ -23,7 +24,8 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Session configuration (required for Passport OAuth)
 app.use(session({
@@ -52,5 +54,6 @@ app.use('/api/social-media', socialMediaRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/quotes', quoteRoutes);
+app.use('/api/otp', otpRoutes);
 
 export default app;

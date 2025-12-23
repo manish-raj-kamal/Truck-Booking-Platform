@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -17,7 +17,7 @@ import ManageLoads from './pages/admin/ManageLoads.jsx';
 import ManageTrucks from './pages/admin/ManageTrucks.jsx';
 import ManageUsers from './pages/admin/ManageUsers.jsx';
 import ManageSocialMedia from './pages/admin/ManageSocialMedia.jsx';
-import { AuthProvider } from './auth/AuthContext.jsx';
+import { AuthProvider, useAuth } from './auth/AuthContext.jsx';
 
 function AppRoutes() {
   return (
@@ -43,16 +43,29 @@ function AppRoutes() {
   );
 }
 
+function AppLayout() {
+  const { user } = useAuth();
+  const location = useLocation();
+
+  // Landing Page (Route "/" for unauthenticated users) has its own Navbar/Footer.
+  // We hide the global ones to prevent duplication.
+  const isLandingPage = location.pathname === '/' && !user;
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      {!isLandingPage && <Navbar />}
+      <main className="flex-grow">
+        <AppRoutes />
+      </main>
+      {!isLandingPage && <Footer />}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <AuthProvider>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <AppRoutes />
-        </main>
-        <Footer />
-      </div>
+      <AppLayout />
     </AuthProvider>
   );
 }
