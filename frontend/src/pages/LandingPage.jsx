@@ -706,7 +706,7 @@ const Footer = () => (
         </div>
       </div>
       <div className="pt-8 border-t border-white/5 text-center text-white/30 text-sm">
-        © 2024 TruckSuvidha. All rights reserved.
+        © 2025 TruckSuvidha. All rights reserved.
       </div>
     </div>
   </footer>
