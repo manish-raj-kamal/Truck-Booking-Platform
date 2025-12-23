@@ -237,3 +237,157 @@ export async function resendOTP(req, res) {
         res.status(500).json({ message: error.message || 'Failed to resend OTP' });
     }
 }
+
+// Send OTP for password reset
+export async function sendPasswordResetOTP(req, res) {
+    try {
+        const { email } = req.body;
+
+        // Validate input
+        if (!email) {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        // Check if user exists
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            // For security, don't reveal if email exists or not
+            // But still return success to prevent email enumeration
+            return res.json({
+                message: 'If an account exists with this email, you will receive a password reset code.',
+                email: email.toLowerCase(),
+                expiresIn: OTP_EXPIRY_MINUTES * 60
+            });
+        }
+
+        // Check if user is Google OAuth only (no password set)
+        if (user.authProvider === 'google' && !user.passwordHash) {
+            return res.status(400).json({
+                message: 'This account uses Google Sign-In. Please login with Google instead.'
+            });
+        }
+
+        // Check rate limiting
+        const recentOtps = await Otp.countDocuments({
+            email: email.toLowerCase(),
+            purpose: 'password-reset',
+            createdAt: { $gte: new Date(Date.now() - OTP_RATE_LIMIT_WINDOW) }
+        });
+
+        if (recentOtps >= OTP_RATE_LIMIT) {
+            return res.status(429).json({
+                message: 'Too many password reset requests. Please try again later.',
+                retryAfter: OTP_RATE_LIMIT_WINDOW / 1000 / 60
+            });
+        }
+
+        // Delete any existing password reset OTPs for this email
+        await Otp.deleteMany({ email: email.toLowerCase(), purpose: 'password-reset' });
+
+        // Generate new OTP
+        const otp = Otp.generateOTP(6);
+        const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
+
+        await Otp.create({
+            email: email.toLowerCase(),
+            otp,
+            purpose: 'password-reset',
+            expiresAt
+        });
+
+        // Send OTP email
+        await sendOTPEmail(email, otp, 'password-reset');
+
+        res.json({
+            message: 'Password reset code sent to your email.',
+            email: email.toLowerCase(),
+            expiresIn: OTP_EXPIRY_MINUTES * 60
+        });
+
+    } catch (error) {
+        console.error('Send password reset OTP error:', error);
+        res.status(500).json({ message: error.message || 'Failed to send password reset code' });
+    }
+}
+
+// Verify OTP and reset password
+export async function verifyPasswordResetOTP(req, res) {
+    try {
+        const { email, otp, newPassword } = req.body;
+
+        if (!email || !otp || !newPassword) {
+            return res.status(400).json({ message: 'Email, OTP, and new password are required' });
+        }
+
+        // Validate password strength
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({
+                message: 'Password must be at least 8 characters with uppercase, lowercase, and special character'
+            });
+        }
+
+        // Find OTP record
+        const otpRecord = await Otp.findOne({
+            email: email.toLowerCase(),
+            purpose: 'password-reset'
+        });
+
+        if (!otpRecord) {
+            return res.status(400).json({ message: 'No reset code found. Please request a new one.' });
+        }
+
+        // Check if expired
+        if (otpRecord.isExpired()) {
+            await Otp.deleteOne({ _id: otpRecord._id });
+            return res.status(400).json({ message: 'Reset code has expired. Please request a new one.' });
+        }
+
+        // Check max attempts
+        if (otpRecord.isMaxAttemptsExceeded()) {
+            await Otp.deleteOne({ _id: otpRecord._id });
+            return res.status(400).json({ message: 'Too many failed attempts. Please request a new code.' });
+        }
+
+        // Verify OTP
+        if (otpRecord.otp !== otp) {
+            otpRecord.attempts += 1;
+            await otpRecord.save();
+
+            const remainingAttempts = otpRecord.maxAttempts - otpRecord.attempts;
+            return res.status(400).json({
+                message: `Invalid code. ${remainingAttempts} attempts remaining.`,
+                remainingAttempts
+            });
+        }
+
+        // OTP verified! Update password
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            await Otp.deleteOne({ _id: otpRecord._id });
+            return res.status(400).json({ message: 'User not found' });
+        }
+
+        // Hash and update password
+        const hashedPassword = await hashPassword(newPassword);
+        user.passwordHash = hashedPassword;
+        await user.save();
+
+        // Delete OTP record
+        await Otp.deleteOne({ _id: otpRecord._id });
+
+        res.json({
+            message: 'Password reset successful! You can now login with your new password.'
+        });
+
+    } catch (error) {
+        console.error('Verify password reset OTP error:', error);
+        res.status(500).json({ message: error.message || 'Failed to reset password' });
+    }
+}

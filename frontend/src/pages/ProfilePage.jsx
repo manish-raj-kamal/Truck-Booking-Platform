@@ -7,7 +7,7 @@ import getCroppedImg from '../utils/cropImage';
 
 export default function ProfilePage() {
     const navigate = useNavigate();
-    const { user, login } = useAuth();
+    const { user, login, refreshUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [avatarLoading, setAvatarLoading] = useState(false);
     const [success, setSuccess] = useState(null);
@@ -30,6 +30,9 @@ export default function ProfilePage() {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
     const [showCropper, setShowCropper] = useState(false);
 
+    // Track if user has a password set
+    const [hasPassword, setHasPassword] = useState(false);
+
     useEffect(() => {
         if (!user) {
             navigate('/login');
@@ -40,6 +43,8 @@ export default function ProfilePage() {
             name: user.name || '',
             email: user.email || ''
         }));
+        // Set hasPassword based on user data
+        setHasPassword(!!user.passwordHash);
     }, [user, navigate]);
 
     const handleChange = (e) => {
@@ -107,6 +112,9 @@ export default function ProfilePage() {
                 login(response.data.token);
             }
 
+            // Refresh user data to immediately show updated avatar
+            await refreshUser();
+
             setSuccess('Profile photo updated successfully!');
             setImageSrc(null);
         } catch (e) {
@@ -132,6 +140,9 @@ export default function ProfilePage() {
             if (response.data.token) {
                 login(response.data.token);
             }
+
+            // Refresh user data to immediately show updated name
+            await refreshUser();
 
             setSuccess('Profile updated successfully!');
         } catch (err) {
@@ -378,13 +389,13 @@ export default function ProfilePage() {
                             <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
-                            {user.authProvider === 'google' && !user.passwordHash ? 'Set Password' : 'Change Password'}
+                            {user.authProvider === 'google' && !hasPassword ? 'Set Password' : 'Change Password'}
                         </h2>
 
                         {user.authProvider === 'google' && (
                             <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
                                 <p className="text-sm text-blue-700">
-                                    {!user.passwordHash
+                                    {!hasPassword
                                         ? "You signed up with Google. Set a password to also login with email and password."
                                         : "You can login with both Google and email/password."
                                     }
@@ -393,7 +404,7 @@ export default function ProfilePage() {
                         )}
 
                         <form onSubmit={handleUpdatePassword} className="space-y-4">
-                            {user.passwordHash && (
+                            {hasPassword && (
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Current Password
@@ -405,6 +416,7 @@ export default function ProfilePage() {
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                                         placeholder="Enter current password"
+                                        required
                                     />
                                 </div>
                             )}
@@ -454,7 +466,7 @@ export default function ProfilePage() {
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                         </svg>
-                                        {user.passwordHash ? 'Update Password' : 'Set Password'}
+                                        {hasPassword ? 'Update Password' : 'Set Password'}
                                     </>
                                 )}
                             </button>

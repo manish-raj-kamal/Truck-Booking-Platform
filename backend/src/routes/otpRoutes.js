@@ -1,15 +1,21 @@
 import { Router } from 'express';
-import { sendRegistrationOTP, verifyRegistrationOTP, resendOTP } from '../controllers/otpController.js';
+import {
+    sendRegistrationOTP,
+    verifyRegistrationOTP,
+    resendOTP,
+    sendPasswordResetOTP,
+    verifyPasswordResetOTP
+} from '../controllers/otpController.js';
 
 const router = Router();
 
-// Send OTP for registration
+// Registration OTP
 router.post('/send', sendRegistrationOTP);
-
-// Verify OTP and complete registration
 router.post('/verify', verifyRegistrationOTP);
-
-// Resend OTP
 router.post('/resend', resendOTP);
+
+// Password Reset OTP
+router.post('/password-reset/send', sendPasswordResetOTP);
+router.post('/password-reset/verify', verifyPasswordResetOTP);
 
 export default router;
