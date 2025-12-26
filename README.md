@@ -1,4 +1,5 @@
 # TruckSuvidha - Truck Booking Platform
+[Click here](https://somya-truck-booking.vercel.app/) to visit the site.
 
 A comprehensive logistics platform connecting shippers with transporters across India. Built with React (Vite), Node.js, Express, and MongoDB.
 
