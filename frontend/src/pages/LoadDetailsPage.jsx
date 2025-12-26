@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+import QuotesSection from '../components/QuotesSection';
+import FinalPaymentSection from '../components/FinalPaymentSection';
 
 export default function LoadDetailsPage() {
     const { id } = useParams();
@@ -270,6 +272,11 @@ export default function LoadDetailsPage() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Quotes Section */}
+                        {['open', 'quoted', 'assigned'].includes(load?.status) && (
+                            <QuotesSection load={load} onQuoteAccepted={fetchLoadDetails} />
+                        )}
                     </div>
 
                     {/* Sidebar */}
@@ -287,6 +294,23 @@ export default function LoadDetailsPage() {
                                     <span className="text-gray-600">Booking Fee</span>
                                     <span className="font-bold text-gray-800">₹{load.bookingFee || 0}</span>
                                 </div>
+
+                                {/* Show accepted quote amount if available */}
+                                {load.acceptedQuoteAmount && (
+                                    <>
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                            <span className="text-gray-600">Accepted Quote</span>
+                                            <span className="font-bold text-purple-600">₹{load.acceptedQuoteAmount.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center py-2 border-b border-gray-100 bg-green-50 -mx-2 px-2 rounded">
+                                            <span className="text-gray-700 font-medium">Final Payment Due</span>
+                                            <span className="font-bold text-green-600">
+                                                ₹{Math.max(0, (load.acceptedQuoteAmount - (load.bookingFee || 0))).toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </>
+                                )}
+
                                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                     <span className="text-gray-600">Status</span>
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${load.paymentId ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
@@ -308,6 +332,11 @@ export default function LoadDetailsPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Final Payment Section - Show when delivery is complete */}
+                        {permissions.isOwner && load.status === 'delivered' && !load.finalPaymentId && (
+                            <FinalPaymentSection load={load} onPaymentComplete={fetchLoadDetails} />
+                        )}
 
                         {/* Contact Info - Hidden for customers viewing someone else's load */}
                         {(permissions.isOwner || permissions.canEdit) && (

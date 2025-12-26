@@ -17,7 +17,10 @@ const loadSchema = new mongoose.Schema({
   },
   postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Driver assigned
+  acceptedQuoteId: { type: mongoose.Schema.Types.ObjectId, ref: 'Quote' },
+  acceptedQuoteAmount: { type: Number }, // The driver's quoted price that was accepted
   paymentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Payment', sparse: true },
+  finalPaymentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Payment', sparse: true }, // Payment after delivery
   bookingFee: { type: Number },
   // Additional details
   pickupAddress: { type: String },

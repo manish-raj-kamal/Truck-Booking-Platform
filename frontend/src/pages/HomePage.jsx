@@ -3,6 +3,7 @@ import { useAuth } from '../auth/AuthContext';
 import LandingPage from './LandingPage';
 import CustomerDashboard from './CustomerDashboard';
 import AdminDashboard from './AdminDashboard';
+import LoadBoardPage from './LoadBoardPage';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -18,7 +19,11 @@ export default function HomePage() {
     return <AdminDashboard />;
   }
 
-  // Driver -> Customer Dashboard (with additional driver features)
+  // Driver -> Load Board (to find and quote on loads)
+  if (user.role === 'driver') {
+    return <LoadBoardPage />;
+  }
+
   // Customer -> Customer Dashboard
   return <CustomerDashboard />;
 }
@@ -38,9 +43,9 @@ export default function HomePage() {
  *    - Cannot access: Admin pages, Available Loads from others
  * 
  * 3. DRIVER:
- *    - Default: CustomerDashboard (/)
- *    - Shows: My Posted Loads + Available Loads section
- *    - Can access: All customer pages + View all loads + Update load status
+ *    - Default: LoadBoardPage (/) - Find available loads and submit quotes
+ *    - Shows: All available loads, filter options, quick quote submission
+ *    - Can access: All customer pages + View all loads + Submit quotes + Update load status
  *    - Cannot access: Admin management pages
  * 
  * 4. ADMIN:

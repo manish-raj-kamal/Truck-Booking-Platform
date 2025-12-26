@@ -153,7 +153,8 @@ export async function createOrder(req, res) {
 
         // Calculate fee
         const feeBreakdown = calculateBookingFee(loadDetails);
-        const amountInPaise = feeBreakdown.totalFee * 100; // Razorpay expects amount in paise
+        const amountInRupees = feeBreakdown.totalFee;
+        const amountInPaise = amountInRupees * 100; // Razorpay expects amount in paise
 
         // Create Razorpay order
         let razorpayOrder;
@@ -177,10 +178,10 @@ export async function createOrder(req, res) {
             });
         }
 
-        // Save payment record in database
+        // Save payment record in database (amount in RUPEES)
         const payment = await Payment.create({
             razorpayOrderId: razorpayOrder.id,
-            amount: amountInPaise,
+            amount: amountInRupees, // Store in RUPEES, not paise
             currency: 'INR',
             status: 'created',
             feeBreakdown,
@@ -290,7 +291,7 @@ export async function verifyPayment(req, res) {
             scheduledDate: payment.loadDetails.scheduledDate,
             postedBy: userId,
             paymentId: payment._id,
-            bookingFee: payment.amount / 100, // Store fee in rupees
+            bookingFee: payment.amount,
             status: 'open'
         });
 
@@ -304,8 +305,7 @@ export async function verifyPayment(req, res) {
             load,
             payment: {
                 id: payment._id,
-                amount: payment.amount / 100, // Convert back to rupees
-                status: payment.status
+                amount: payment.amount,
             }
         });
     } catch (error) {
@@ -394,5 +394,229 @@ export async function getPaymentById(req, res) {
     } catch (error) {
         console.error('Error fetching payment:', error);
         res.status(500).json({ message: 'Failed to fetch payment details' });
+    }
+}
+
+/**
+ * Create a Razorpay order for final payment (quote amount - booking fee)
+ * POST /api/payments/create-final-order
+ */
+export async function createFinalPaymentOrder(req, res) {
+    try {
+        if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+            return res.status(500).json({
+                message: 'Payment gateway not configured.',
+                error: 'RAZORPAY_NOT_CONFIGURED'
+            });
+        }
+
+        const { loadId } = req.body;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        if (!loadId) {
+            return res.status(400).json({ message: 'Load ID is required' });
+        }
+
+        // Find the load
+        const load = await Load.findById(loadId).populate('postedBy', 'name email');
+        if (!load) {
+            return res.status(404).json({ message: 'Load not found' });
+        }
+
+        // Verify user owns the load
+        if (load.postedBy._id.toString() !== userId) {
+            return res.status(403).json({ message: 'Only the load owner can make this payment' });
+        }
+
+        // Check load status - must be delivered
+        if (load.status !== 'delivered') {
+            return res.status(400).json({
+                message: 'Final payment can only be made after delivery is confirmed',
+                currentStatus: load.status
+            });
+        }
+
+        // Check if final payment already made
+        if (load.finalPaymentId) {
+            return res.status(400).json({ message: 'Final payment has already been made for this load' });
+        }
+
+        // Calculate final payment amount
+        const quoteAmount = load.acceptedQuoteAmount || 0;
+        const bookingFee = load.bookingFee || 0;
+        const finalAmount = quoteAmount - bookingFee;
+
+        if (finalAmount <= 0) {
+            // If booking fee covers or exceeds quote, mark as completed
+            load.status = 'completed';
+            load.statusHistory.push({
+                status: 'completed',
+                changedBy: userId,
+                changedAt: new Date(),
+                note: 'No additional payment required - booking fee covers the quote'
+            });
+            await load.save();
+
+            return res.json({
+                success: true,
+                message: 'No additional payment required',
+                finalAmount: 0
+            });
+        }
+
+        const amountInPaise = Math.round(finalAmount * 100);
+
+        // Create Razorpay order
+        let razorpayOrder;
+        try {
+            razorpayOrder = await getRazorpayInstance().orders.create({
+                amount: amountInPaise,
+                currency: 'INR',
+                receipt: `final_${Date.now()}_${userId.slice(-6)}`,
+                notes: {
+                    userId: userId,
+                    loadId: loadId,
+                    paymentType: 'final_payment',
+                    quoteAmount: quoteAmount,
+                    bookingFee: bookingFee
+                }
+            });
+        } catch (razorpayError) {
+            console.error('Razorpay API error:', razorpayError);
+            return res.status(500).json({
+                message: 'Failed to create payment order',
+                error: razorpayError.message
+            });
+        }
+
+        // Save payment record (amount in RUPEES)
+        const payment = await Payment.create({
+            razorpayOrderId: razorpayOrder.id,
+            amount: finalAmount, // Store in RUPEES
+            currency: 'INR',
+            paymentType: 'final_payment',
+            status: 'created',
+            loadId: loadId,
+            userId,
+            feeBreakdown: {
+                quoteAmount: quoteAmount,
+                bookingFeeDeducted: bookingFee,
+                totalFee: finalAmount
+            }
+        });
+
+        res.status(201).json({
+            success: true,
+            order: {
+                id: razorpayOrder.id,
+                amount: razorpayOrder.amount,
+                currency: razorpayOrder.currency
+            },
+            breakdown: {
+                quoteAmount,
+                bookingFee,
+                finalAmount
+            },
+            paymentId: payment._id,
+            key: process.env.RAZORPAY_KEY_ID
+        });
+    } catch (error) {
+        console.error('Error creating final payment order:', error);
+        res.status(500).json({ message: 'Failed to create payment order', error: error.message });
+    }
+}
+
+/**
+ * Verify final payment and complete the load
+ * POST /api/payments/verify-final
+ */
+export async function verifyFinalPayment(req, res) {
+    try {
+        const {
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature
+        } = req.body;
+
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+            return res.status(400).json({ message: 'Missing payment verification details' });
+        }
+
+        // Find the payment record
+        const payment = await Payment.findOne({ razorpayOrderId: razorpay_order_id });
+
+        if (!payment) {
+            return res.status(404).json({ message: 'Payment record not found' });
+        }
+
+        if (payment.userId.toString() !== userId) {
+            return res.status(403).json({ message: 'Unauthorized access to payment' });
+        }
+
+        // Verify signature
+        const body = razorpay_order_id + '|' + razorpay_payment_id;
+        const expectedSignature = crypto
+            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+            .update(body.toString())
+            .digest('hex');
+
+        const isAuthentic = expectedSignature === razorpay_signature;
+
+        if (!isAuthentic) {
+            payment.status = 'failed';
+            payment.failedAt = new Date();
+            payment.failureReason = 'Signature verification failed';
+            await payment.save();
+
+            return res.status(400).json({
+                success: false,
+                message: 'Payment verification failed'
+            });
+        }
+
+        // Payment verified
+        payment.razorpayPaymentId = razorpay_payment_id;
+        payment.razorpaySignature = razorpay_signature;
+        payment.status = 'captured';
+        payment.paidAt = new Date();
+        await payment.save();
+
+        // Update load status to completed
+        const load = await Load.findById(payment.loadId);
+        if (load) {
+            load.status = 'completed';
+            load.finalPaymentId = payment._id;
+            load.statusHistory = load.statusHistory || [];
+            load.statusHistory.push({
+                status: 'completed',
+                changedBy: userId,
+                changedAt: new Date(),
+                note: `Final payment of ₹${payment.amount} completed`
+            });
+            await load.save();
+        }
+
+        res.json({
+            success: true,
+            message: 'Payment verified and order completed successfully',
+            payment: {
+                id: payment._id,
+                amount: payment.amount,
+                status: payment.status
+            }
+        });
+    } catch (error) {
+        console.error('Error verifying final payment:', error);
+        res.status(500).json({ message: 'Payment verification failed', error: error.message });
     }
 }

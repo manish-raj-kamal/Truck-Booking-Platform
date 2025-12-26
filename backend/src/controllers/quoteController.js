@@ -146,6 +146,8 @@ export async function acceptQuote(req, res) {
     // Update load status and assign driver
     load.status = 'assigned';
     load.assignedTo = quote.transporter;
+    load.acceptedQuoteId = quote._id;
+    load.acceptedQuoteAmount = quote.amount;
     load.statusHistory = load.statusHistory || [];
     load.statusHistory.push({
       status: 'assigned',

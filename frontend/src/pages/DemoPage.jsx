@@ -33,39 +33,67 @@ const DemoPage = () => {
                     For Customers: Shipper Journey
                 </h3>
 
-                <div className="grid md:grid-cols-4 gap-6">
-                    {/* Post a Load */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">1️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Post a Load</h4>
-                        <p className="text-slate-300">Enter pickup/drop locations, cargo type, and weight. Get instant quotes from verified drivers.</p>
+                <div className="grid md:grid-cols-5 gap-4">
+                    {/* Step 1: Post a Load */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">1️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Post Load</h4>
+                        <p className="text-slate-300 text-sm">Enter cargo details, pay a small booking fee, and your load goes live.</p>
                     </motion.div>
 
-                    {/* Select a Truck */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">2️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Select a Truck</h4>
-                        <p className="text-slate-300">Browse available trucks, check driver ratings, and select the best match for your shipment.</p>
+                    {/* Step 2: Review Quotes */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">2️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Review Quotes</h4>
+                        <p className="text-slate-300 text-sm">Drivers submit their price quotes. Compare rates and driver profiles.</p>
                     </motion.div>
 
-                    {/* Track Shipment */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">3️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Track Shipment</h4>
-                        <p className="text-slate-300">Real-time GPS tracking of your goods. Get live updates on delivery progress.</p>
+                    {/* Step 3: Accept Quote */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">3️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Accept Quote</h4>
+                        <p className="text-slate-300 text-sm">Choose the best quote and the driver is automatically assigned.</p>
                     </motion.div>
 
-                    {/* Confirm & Pay */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">4️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Confirm & Pay</h4>
-                        <p className="text-slate-300">Verify delivery completion and make secure payment via Razorpay.</p>
+                    {/* Step 4: Track Delivery */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">4️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Track Delivery</h4>
+                        <p className="text-slate-300 text-sm">Real-time tracking as your goods move from pickup to delivery.</p>
+                    </motion.div>
+
+                    {/* Step 5: Pay & Complete */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-blue-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">5️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Pay & Complete</h4>
+                        <p className="text-slate-300 text-sm">Pay remaining amount (Quote - Booking Fee) via Razorpay.</p>
                     </motion.div>
                 </div>
 
-                <div className="mt-8 p-6 bg-gradient-to-r from-blue-900/40 to-indigo-900/40 rounded-2xl border border-blue-500/30">
+                {/* Payment info box */}
+                <div className="mt-6 p-4 bg-blue-900/30 rounded-xl border border-blue-400/20">
+                    <h4 className="text-md font-semibold text-blue-200 mb-2 flex items-center gap-2">
+                        💰 How Payment Works
+                    </h4>
+                    <div className="flex flex-wrap gap-4 text-sm text-slate-300">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                            <span>Pay small booking fee when posting</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                            <span>Driver quotes their price</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                            <span>Pay (Quote - Booking Fee) after delivery</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-6 p-6 bg-gradient-to-r from-blue-900/40 to-indigo-900/40 rounded-2xl border border-blue-500/30">
                     <h4 className="text-lg font-semibold text-blue-200 mb-2">💡 Pro Tip</h4>
-                    <p className="text-slate-300">Customers can save up to 20% on shipping costs by comparing multiple bids on our platform.</p>
+                    <p className="text-slate-300">Compare quotes from multiple drivers to get the best rate! Driver ratings and delivery time estimates help you make informed decisions.</p>
                 </div>
             </div>
 
@@ -91,39 +119,67 @@ const DemoPage = () => {
                     For Drivers: Carrier Journey
                 </h3>
 
-                <div className="grid md:grid-cols-4 gap-6">
-                    {/* Find Loads */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">1️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Find Loads</h4>
-                        <p className="text-slate-300">Browse thousands of available loads based on your route, truck type, and capacity.</p>
+                <div className="grid md:grid-cols-5 gap-4">
+                    {/* Step 1: Browse Loads */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">1️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Browse Loads</h4>
+                        <p className="text-slate-300 text-sm">Find available loads matching your route and truck capacity on the Load Board.</p>
                     </motion.div>
 
-                    {/* Accept Load */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">2️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Accept Load</h4>
-                        <p className="text-slate-300">Review load details, confirm acceptance, and start your journey with the shipper.</p>
+                    {/* Step 2: Submit Quote */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">2️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Submit Quote</h4>
+                        <p className="text-slate-300 text-sm">Enter your price quote for the job. Add estimated delivery time.</p>
                     </motion.div>
 
-                    {/* Deliver Load */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">3️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Deliver Load</h4>
-                        <p className="text-slate-300">Transport the cargo safely to the destination and update delivery status.</p>
+                    {/* Step 3: Get Assigned */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">3️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Get Assigned</h4>
+                        <p className="text-slate-300 text-sm">If customer accepts your quote, you're assigned to the load!</p>
                     </motion.div>
 
-                    {/* Get Paid Fast */}
-                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-6 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
-                        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">4️⃣</div>
-                        <h4 className="text-xl font-semibold text-white mb-2">Get Paid Fast</h4>
-                        <p className="text-slate-300">Upload proof of delivery and receive payments quickly and securely to your account.</p>
+                    {/* Step 4: Deliver */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">4️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Deliver</h4>
+                        <p className="text-slate-300 text-sm">Pickup cargo, update status as you go, and deliver safely.</p>
+                    </motion.div>
+
+                    {/* Step 5: Get Paid */}
+                    <motion.div variants={itemVariants} className="bg-slate-800/50 p-5 rounded-2xl border border-white/10 hover:border-green-400/50 transition duration-300 group">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">5️⃣</div>
+                        <h4 className="text-lg font-semibold text-white mb-2">Get Paid</h4>
+                        <p className="text-slate-300 text-sm">Customer pays your quoted amount. Fast & secure payments!</p>
                     </motion.div>
                 </div>
 
-                <div className="mt-8 p-6 bg-gradient-to-r from-green-900/40 to-emerald-900/40 rounded-2xl border border-green-500/30">
+                {/* Quoting info box */}
+                <div className="mt-6 p-4 bg-green-900/30 rounded-xl border border-green-400/20">
+                    <h4 className="text-md font-semibold text-green-200 mb-2 flex items-center gap-2">
+                        💼 How Quoting Works
+                    </h4>
+                    <div className="flex flex-wrap gap-4 text-sm text-slate-300">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                            <span>You set your own price</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                            <span>Customer compares quotes</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                            <span>Best quote wins the job!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-6 p-6 bg-gradient-to-r from-green-900/40 to-emerald-900/40 rounded-2xl border border-green-500/30">
                     <h4 className="text-lg font-semibold text-green-200 mb-2">💡 Pro Tip</h4>
-                    <p className="text-slate-300">Top-rated drivers get priority access to premium high-paying loads on TruckSuvidha.</p>
+                    <p className="text-slate-300">Competitive quotes with quick estimated delivery times get accepted more often! Build your rating for premium loads.</p>
                 </div>
             </div>
 
