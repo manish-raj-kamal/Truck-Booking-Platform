@@ -1,57 +1,220 @@
-## TruckSuvidha — 4‑Minute YouTube Script (Simple Words)
+# TruckSuvidha - Video Demonstration Script
+## Duration: 4 Minutes
 
-Short, easy script for speaking on video. Clear cues. Total time: about 4 minutes.
+---
 
-00:00 — Hook
-[On screen: Landing page hero]
-“Hi everyone! This is TruckSuvidha. 
-It connects people who ship goods with trusted transporters in India. If you move goods, or you drive trucks, this helps you. 
-I’ll show you the app in four minutes. Let’s go.”
+## 🎬 INTRODUCTION (0:00 - 0:20)
 
-00:15 — Landing Page
-[On screen: Scroll the landing]
-“The first page is clean and fast. You can log in or create an account. You also see trust signs from our verified transporters. Now we’ll sign in.”
+**[SCREEN: Landing Page - Hero Section]**
 
-00:35 — Login & Register
-[On screen: Login, then Register]
-“Log in with email and password, or use Google. The forms are simple and work well on phones. After you register, you’re signed in and sent to your home.”
+> **NARRATOR:**
+> "Welcome to TruckSuvidha - India's smart logistics platform connecting shippers with transporters. In this demo, we'll walk through our platform's complete workflow - from posting a load to successful delivery."
 
-00:55 — Your Home View
-[On screen: Home routing]
-“The home view changes by role. Guests see the landing page. Customers and drivers see the Customer Dashboard. Admins and SuperAdmins see the Admin Dashboard. Let’s check the customer view.”
+**[SCROLL: Show animated "How It Works" section briefly]**
 
-01:10 — Customer Dashboard
-[On screen: CustomerDashboard]
-“You get quick buttons and your loads. You can post a load, open the load board, or find trucks. Loads show clear statuses: open, quoted, assigned, in transit, delivered.”
+---
 
-01:35 — Post a Load (3 steps)
-[On screen: Post Load]
-“Step 1: Route — pickup city, delivery city, full or part load.
-Step 2: Details — material, weight, truck type, number of trucks.
-Step 3: Schedule & Pay — pick a date, confirm contact info, see the fee, and pay with Razorpay. The progress bar shows your place.”
+## 📝 CUSTOMER REGISTRATION & LOGIN (0:20 - 0:45)
 
-02:15 — Load Board
-[On screen: LoadBoardPage]
-“Customers see their loads. Drivers see many loads and can filter by city, material, or truck type. Drivers can send quotes and update status: picked up, in transit, delivered.”
+**[SCREEN: Click "Get Started" → Register Page]**
 
-02:45 — Truck Board
-[On screen: TruckBoardPage]
-“Find trucks by type and capacity. See current location. Use filters to match your need. Then reach out for the best freight.”
+> **NARRATOR:**
+> "Let's start as a customer. Users can register using email or Google Sign-In for quick access."
 
-03:05 — Load Details
-[On screen: LoadDetailsPage]
-“Each load has a details page: route, shipment info, contacts, date, and status. Actions depend on role: customers can cancel, drivers move status, admins can help.”
+**[ACTION: Show form briefly, then click Google Sign-In]**
 
-03:25 — Admin Dashboard & Tools
-[On screen: AdminDashboard → Manage pages]
-“Admins see key numbers and quick links. Manage Loads lets you filter and change status. Manage Users lets you adjust roles safely. Manage Trucks keeps vehicle data fresh. SuperAdmins can also update Social Media links for the footer.”
+> "After registration, you select your role - Customer for shippers, or Driver for transporters."
 
-03:55 — Contact & Profile
-[On screen: ContactPage → ProfilePage]
-“Contact page: phone, email, WhatsApp, business hours, and a form. SuperAdmins can edit it. Profile page: change name, email, password, and upload a photo with cropping.”
+**[SCREEN: Complete Profile Page → Select "Customer" → Submit]**
 
-04:10 — Wrap‑Up (CTA)
-[On screen: Landing or Dashboard]
-“That’s TruckSuvidha in four minutes. Post loads fast. Find trucks. Track orders. Manage with confidence. Like and subscribe if you enjoyed this. Comment what you want next. Thanks for watching!”
+---
 
-— End of Short Script —
+## 📦 POSTING A LOAD (0:45 - 1:30)
+
+**[SCREEN: Click "Post a Load" from Navbar]**
+
+> **NARRATOR:**
+> "As a customer, posting a load is simple. Enter your shipment details:"
+
+**[ACTION: Fill the form step-by-step]**
+
+| Field | Value |
+|-------|-------|
+| Load Type | Full Truck Load |
+| Source City | Delhi |
+| Destination | Mumbai |
+| Material | Electronics |
+| Weight | 5 MT |
+| Truck Type | 10 Wheel |
+| Date | (Tomorrow's date) |
+
+> "Notice the booking fee calculator on the right - it dynamically calculates based on weight, material type, and truck size."
+
+**[SCREEN: Show fee breakdown - Base ₹99 + Weight + Material fees]**
+
+> "Click 'Pay & Post Load' to proceed to secure payment via Razorpay."
+
+**[ACTION: Click Pay → Show Razorpay modal → Complete payment]**
+
+> "Payment verified! Your load is now live and visible to all transporters."
+
+---
+
+## 🚛 DRIVER WORKFLOW - BROWSING & QUOTING (1:30 - 2:15)
+
+**[SCREEN: Logout → Login as Driver account]**
+
+> **NARRATOR:**
+> "Now let's switch to a driver's perspective."
+
+**[SCREEN: Load Board Page]**
+
+> "The Load Board shows all available shipments. Drivers can filter by route, material type, or truck requirements."
+
+**[ACTION: Click on the Electronics load we just posted]**
+
+**[SCREEN: Load Details Page]**
+
+> "Here's the load we posted. The driver sees complete details - pickup location, delivery point, material type, and weight."
+
+**[ACTION: Click "Submit Quote" button]**
+
+> "To bid on this load, the driver enters their quote amount and estimated delivery time."
+
+**[ACTION: Enter Quote ₹25,000, Delivery: 3 days, Message: "I have GPS tracking available"]**
+
+**[SCREEN: Submit → Show success message]**
+
+> "Quote submitted! The customer will now see this bid."
+
+---
+
+## ✅ ACCEPTING QUOTES & ORDER ASSIGNMENT (2:15 - 2:45)
+
+**[SCREEN: Login back as Customer]**
+
+**[SCREEN: Navigate to Load Details Page (Customer Dashboard → Click load)]**
+
+> **NARRATOR:**
+> "Back as the customer, we can see all quotes received on our load."
+
+**[ACTION: Show quotes list with driver details and amounts]**
+
+> "Review each quote - see the driver's proposed price, delivery estimate, and message. Click 'Accept' on the best offer."
+
+**[ACTION: Click Accept on the quote]**
+
+> "The driver is now assigned! Load status changes from 'Quoted' to 'Assigned'. Other quotes are automatically rejected."
+
+---
+
+## 🔄 ORDER LIFECYCLE & TRACKING (2:45 - 3:20)
+
+**[SCREEN: Login as Driver]**
+
+> **NARRATOR:**
+> "The assigned driver can now update the shipment status at each stage."
+
+**[SCREEN: Navigate to the assigned load]**
+
+**[ACTION: Click "Mark as Picked Up"]**
+
+> "First, mark as 'Picked Up' when cargo is loaded."
+
+**[SCREEN: Status changes to "Picked Up"]**
+
+**[ACTION: Click "Mark as In Transit"]**
+
+> "Then 'In Transit' when the journey begins."
+
+**[SCREEN: Status changes to "In Transit"]**
+
+**[ACTION: Click "Mark as Delivered"]**
+
+> "Finally, 'Delivered' upon reaching the destination."
+
+**[SCREEN: Show status timeline/history]**
+
+> "The customer can track these updates in real-time through their dashboard."
+
+---
+
+## 👨‍💼 ADMIN DASHBOARD (3:20 - 3:50)
+
+**[SCREEN: Login as Admin]**
+
+> **NARRATOR:**
+> "Administrators have full platform control through the Admin Dashboard."
+
+**[SCREEN: Admin → Manage Users]**
+
+> "Manage all users - view profiles, change roles, or remove accounts."
+
+**[SCREEN: Admin → Manage Loads]**
+
+> "Monitor all loads, update statuses, or assign drivers manually if needed."
+
+**[SCREEN: Admin → Manage Trucks]**
+
+> "Maintain the truck inventory - add new vehicles, update availability."
+
+**[SCREEN: Admin → Social Media Settings]**
+
+> "And manage platform content like social media links."
+
+---
+
+## 📱 ADDITIONAL FEATURES (3:50 - 4:00)
+
+**[SCREEN: Quick montage of:]**
+
+1. **Contact Page** - Inquiry form & contact details
+2. **Profile Page** - Avatar upload, password change
+3. **Demo Page** - Interactive feature walkthrough
+4. **Mobile Responsive Design** - Show on mobile viewport
+
+> **NARRATOR:**
+> "TruckSuvidha also features a contact system, profile management, interactive demos, and fully responsive mobile design."
+
+---
+
+## 🎬 CLOSING (4:00)
+
+**[SCREEN: Landing Page Hero]**
+
+> **NARRATOR:**
+> "TruckSuvidha - Making logistics simple, transparent, and efficient. Start shipping today!"
+
+**[FADE TO: Logo + Website URL]**
+
+---
+
+## 📋 RECORDING NOTES
+
+### Accounts to Prepare Before Recording:
+| Role | Email | Purpose |
+|------|-------|---------|
+| Customer | customer@demo.com | Post load, accept quotes |
+| Driver | driver@demo.com | Browse loads, submit quotes, update status |
+| Admin | admin@demo.com | Show admin dashboard |
+
+### Key Transitions:
+- Use smooth transitions between role switches
+- Keep browser zoom at 100% for clarity
+- Highlight cursor movements during actions
+
+### Timing Summary:
+| Section | Duration | Cumulative |
+|---------|----------|------------|
+| Introduction | 20s | 0:20 |
+| Customer Registration | 25s | 0:45 |
+| Posting a Load | 45s | 1:30 |
+| Driver Workflow | 45s | 2:15 |
+| Accepting Quotes | 30s | 2:45 |
+| Order Lifecycle | 35s | 3:20 |
+| Admin Dashboard | 30s | 3:50 |
+| Additional Features | 10s | 4:00 |
+
+---
+
+**Total Runtime: 4:00**

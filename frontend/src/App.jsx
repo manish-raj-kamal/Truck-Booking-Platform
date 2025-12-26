@@ -14,6 +14,7 @@ import LoadBoardPage from './pages/LoadBoardPage.jsx';
 import LoadDetailsPage from './pages/LoadDetailsPage.jsx';
 import TruckBoardPage from './pages/TruckBoardPage.jsx';
 import PostLoadPage from './pages/PostLoadPage.jsx';
+import DemoPage from './pages/DemoPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
 import ManageLoads from './pages/admin/ManageLoads.jsx';
 import ManageTrucks from './pages/admin/ManageTrucks.jsx';
@@ -35,6 +36,7 @@ function AppRoutes() {
       <Route path="/load/:id" element={<LoadDetailsPage />} />
       <Route path="/truck-board" element={<TruckBoardPage />} />
       <Route path="/post-load" element={<PostLoadPage />} />
+      <Route path="/demo" element={<DemoPage />} />
       <Route path="/contact" element={<ContactPage />} />
 
       {/* Admin Routes */}

@@ -463,6 +463,13 @@ export default function ContactPage() {
                 <span className="text-2xl group-hover:animate-wiggle">✉️</span>
                 Email Us
               </a>
+              <Link
+                to="/demo"
+                className="group flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 backdrop-blur-sm px-6 py-3 rounded-full font-semibold transition-all duration-300 magnetic-hover animate-bounce-click text-slate-900"
+              >
+                <span className="text-2xl group-hover:animate-wiggle">🎥</span>
+                View Demo
+              </Link>
             </div>
           </div>
         </div>

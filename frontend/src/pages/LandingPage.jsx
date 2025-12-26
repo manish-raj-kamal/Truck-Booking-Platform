@@ -130,12 +130,12 @@ const HeroSection = () => {
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-pink-500 opacity-0 group-hover:opacity-10 transition-opacity" />
             </Link>
-            <button className="px-8 py-4 rounded-2xl font-bold text-lg text-white border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2">
+            <Link to="/demo" className="px-8 py-4 rounded-2xl font-bold text-lg text-white border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                 <div className="w-0 h-0 border-t-[5px] border-t-transparent border-l-[8px] border-l-white border-b-[5px] border-b-transparent ml-1" />
               </div>
               Watch Demo
-            </button>
+            </Link>
           </motion.div>
         </motion.div>
 
@@ -694,6 +694,16 @@ const Footer = () => (
             <li><Link to="/load-board" className="hover:text-white transition-colors">Find Loads</Link></li>
             <li><Link to="/truck-board" className="hover:text-white transition-colors">Find Trucks</Link></li>
             <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-white font-bold mb-6">Services</h4>
+          <ul className="space-y-4 text-white/50">
+            <li><Link to="/demo" className="hover:text-white transition-colors">View Demo</Link></li>
+            <li><Link to="/load-board" className="hover:text-white transition-colors">Load Booking</Link></li>
+            <li><Link to="/truck-board" className="hover:text-white transition-colors">Truck Booking</Link></li>
+            <li><Link to="/" className="hover:text-white transition-colors">GPS Tracking</Link></li>
+            <li><Link to="/" className="hover:text-white transition-colors">Insurance</Link></li>
           </ul>
         </div>
         <div>
