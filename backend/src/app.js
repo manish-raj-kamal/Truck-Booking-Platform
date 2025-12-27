@@ -16,7 +16,6 @@ import otpRoutes from './routes/otpRoutes.js';
 
 const app = express();
 
-// Configure CORS to allow requests from any origin (or specific ones)
 app.use(cors({
   origin: process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://somya-truck-booking.vercel.app' : 'http://localhost:5173'),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -27,26 +26,23 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// Session configuration (required for Passport OAuth)
 app.use(session({
   secret: process.env.SESSION_SECRET || process.env.JWT_SECRET || 'truck-booking-session-secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
-// Initialize Passport
 configurePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
-app.use('/auth', googleAuthRoutes); // Google OAuth routes (not under /api)
+app.use('/auth', googleAuthRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/trucks', truckRoutes);
 app.use('/api/loads', loadRoutes);

@@ -6,32 +6,28 @@ import jwt from 'jsonwebtoken';
 
 // Rate limiting: Max 3 OTP requests per email per hour
 const OTP_RATE_LIMIT = 3;
-const OTP_RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const OTP_RATE_LIMIT_WINDOW = 60 * 60 * 1000; 
 const OTP_EXPIRY_MINUTES = 10;
 
-// Send OTP for registration
+// OTP for registration
 export async function sendRegistrationOTP(req, res) {
     try {
         const { email, name, password } = req.body;
 
-        // Validate input
         if (!email || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
         }
-
-        // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
-        // Check if user already exists
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
             return res.status(409).json({ message: 'Email already registered. Please login instead.' });
         }
 
-        // Check rate limiting
+        
         const recentOtps = await Otp.countDocuments({
             email: email.toLowerCase(),
             purpose: 'registration',
@@ -41,18 +37,16 @@ export async function sendRegistrationOTP(req, res) {
         if (recentOtps >= OTP_RATE_LIMIT) {
             return res.status(429).json({
                 message: 'Too many OTP requests. Please try again later.',
-                retryAfter: OTP_RATE_LIMIT_WINDOW / 1000 / 60 // minutes
+                retryAfter: OTP_RATE_LIMIT_WINDOW / 1000 / 60 
             });
         }
 
-        // Delete any existing OTPs for this email
         await Otp.deleteMany({ email: email.toLowerCase(), purpose: 'registration' });
 
-        // Generate new OTP
         const otp = Otp.generateOTP(6);
         const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
-        // Store OTP with hashed password (so we can create user after verification)
+        
         const hashedPassword = await hashPassword(password);
 
         await Otp.create({
@@ -60,17 +54,15 @@ export async function sendRegistrationOTP(req, res) {
             otp,
             purpose: 'registration',
             expiresAt,
-            // Store registration data temporarily
             tempData: JSON.stringify({ name, passwordHash: hashedPassword })
         });
 
-        // Send OTP email
         await sendOTPEmail(email, otp, 'registration');
 
         res.json({
             message: 'OTP sent successfully',
             email: email.toLowerCase(),
-            expiresIn: OTP_EXPIRY_MINUTES * 60 // seconds
+            expiresIn: OTP_EXPIRY_MINUTES * 60 
         });
 
     } catch (error) {
@@ -79,7 +71,6 @@ export async function sendRegistrationOTP(req, res) {
     }
 }
 
-// Verify OTP and complete registration
 export async function verifyRegistrationOTP(req, res) {
     try {
         const { email, otp, name, password } = req.body;
@@ -88,7 +79,6 @@ export async function verifyRegistrationOTP(req, res) {
             return res.status(400).json({ message: 'Email and OTP are required' });
         }
 
-        // Find OTP record
         const otpRecord = await Otp.findOne({
             email: email.toLowerCase(),
             purpose: 'registration'
@@ -98,21 +88,16 @@ export async function verifyRegistrationOTP(req, res) {
             return res.status(400).json({ message: 'No OTP found. Please request a new one.' });
         }
 
-        // Check if expired
         if (otpRecord.isExpired()) {
             await Otp.deleteOne({ _id: otpRecord._id });
             return res.status(400).json({ message: 'OTP has expired. Please request a new one.' });
         }
-
-        // Check max attempts
         if (otpRecord.isMaxAttemptsExceeded()) {
             await Otp.deleteOne({ _id: otpRecord._id });
             return res.status(400).json({ message: 'Too many failed attempts. Please request a new OTP.' });
         }
 
-        // Verify OTP
         if (otpRecord.otp !== otp) {
-            // Increment attempts
             otpRecord.attempts += 1;
             await otpRecord.save();
 
@@ -123,8 +108,6 @@ export async function verifyRegistrationOTP(req, res) {
             });
         }
 
-        // OTP verified! Create user
-        // Check if user already exists (edge case: concurrent registrations)
         const existingUser = await User.findOne({ email: email.toLowerCase() });
         if (existingUser) {
             await Otp.deleteOne({ _id: otpRecord._id });
@@ -141,10 +124,8 @@ export async function verifyRegistrationOTP(req, res) {
             authProvider: 'local'
         });
 
-        // Delete OTP record
         await Otp.deleteOne({ _id: otpRecord._id });
 
-        // Generate JWT token for auto-login
         const token = jwt.sign(
             { id: user._id, role: user.role, email: user.email, name: user.name },
             process.env.JWT_SECRET,
@@ -168,7 +149,6 @@ export async function verifyRegistrationOTP(req, res) {
     }
 }
 
-// Resend OTP
 export async function resendOTP(req, res) {
     try {
         const { email, password, name, purpose = 'registration' } = req.body;
@@ -177,7 +157,6 @@ export async function resendOTP(req, res) {
             return res.status(400).json({ message: 'Email is required' });
         }
 
-        // Check rate limiting
         const recentOtps = await Otp.countDocuments({
             email: email.toLowerCase(),
             purpose,
@@ -191,7 +170,6 @@ export async function resendOTP(req, res) {
             });
         }
 
-        // For registration, also check if user exists
         if (purpose === 'registration') {
             const existingUser = await User.findOne({ email: email.toLowerCase() });
             if (existingUser) {
@@ -199,14 +177,10 @@ export async function resendOTP(req, res) {
             }
         }
 
-        // Delete existing OTPs
         await Otp.deleteMany({ email: email.toLowerCase(), purpose });
 
-        // Generate and save new OTP
         const otp = Otp.generateOTP(6);
         const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
-
-        // For registration, we need password
         if (purpose === 'registration' && password) {
             const hashedPassword = await hashPassword(password);
             await Otp.create({
@@ -224,7 +198,6 @@ export async function resendOTP(req, res) {
             });
         }
 
-        // Send OTP email
         await sendOTPEmail(email, otp, purpose);
 
         res.json({
@@ -238,12 +211,9 @@ export async function resendOTP(req, res) {
     }
 }
 
-// Send OTP for password reset
 export async function sendPasswordResetOTP(req, res) {
     try {
         const { email } = req.body;
-
-        // Validate input
         if (!email) {
             return res.status(400).json({ message: 'Email is required' });
         }
@@ -254,11 +224,8 @@ export async function sendPasswordResetOTP(req, res) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
-        // Check if user exists
         const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
-            // For security, don't reveal if email exists or not
-            // But still return success to prevent email enumeration
             return res.json({
                 message: 'If an account exists with this email, you will receive a password reset code.',
                 email: email.toLowerCase(),
@@ -266,14 +233,12 @@ export async function sendPasswordResetOTP(req, res) {
             });
         }
 
-        // Check if user is Google OAuth only (no password set)
         if (user.authProvider === 'google' && !user.passwordHash) {
             return res.status(400).json({
                 message: 'This account uses Google Sign-In. Please login with Google instead.'
             });
         }
 
-        // Check rate limiting
         const recentOtps = await Otp.countDocuments({
             email: email.toLowerCase(),
             purpose: 'password-reset',
@@ -287,10 +252,8 @@ export async function sendPasswordResetOTP(req, res) {
             });
         }
 
-        // Delete any existing password reset OTPs for this email
         await Otp.deleteMany({ email: email.toLowerCase(), purpose: 'password-reset' });
 
-        // Generate new OTP
         const otp = Otp.generateOTP(6);
         const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
@@ -301,7 +264,6 @@ export async function sendPasswordResetOTP(req, res) {
             expiresAt
         });
 
-        // Send OTP email
         await sendOTPEmail(email, otp, 'password-reset');
 
         res.json({
@@ -316,7 +278,6 @@ export async function sendPasswordResetOTP(req, res) {
     }
 }
 
-// Verify OTP and reset password
 export async function verifyPasswordResetOTP(req, res) {
     try {
         const { email, otp, newPassword } = req.body;
@@ -325,7 +286,6 @@ export async function verifyPasswordResetOTP(req, res) {
             return res.status(400).json({ message: 'Email, OTP, and new password are required' });
         }
 
-        // Validate password strength
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
         if (!passwordRegex.test(newPassword)) {
             return res.status(400).json({
@@ -333,7 +293,6 @@ export async function verifyPasswordResetOTP(req, res) {
             });
         }
 
-        // Find OTP record
         const otpRecord = await Otp.findOne({
             email: email.toLowerCase(),
             purpose: 'password-reset'

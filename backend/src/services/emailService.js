@@ -1,8 +1,6 @@
 import nodemailer from 'nodemailer';
 
-// Create transporter with configuration
 const createTransporter = () => {
-    // Check for required environment variables
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
         console.warn('⚠️ Email service not configured. Set SMTP_HOST, SMTP_USER, SMTP_PASS in environment variables.');
         return null;
@@ -11,7 +9,7 @@ const createTransporter = () => {
     return nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+        secure: process.env.SMTP_SECURE === 'true',
         auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS
@@ -19,7 +17,6 @@ const createTransporter = () => {
     });
 };
 
-// Send OTP email
 export async function sendOTPEmail(email, otp, purpose = 'registration') {
     const transporter = createTransporter();
 
@@ -111,8 +108,6 @@ export async function sendOTPEmail(email, otp, purpose = 'registration') {
         throw new Error('Failed to send verification email. Please try again.');
     }
 }
-
-// Verify email configuration
 export async function verifyEmailConfig() {
     const transporter = createTransporter();
 

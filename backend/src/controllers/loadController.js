@@ -11,14 +11,12 @@ export async function postLoad(req, res) {
       });
     }
 
-    // Validate type enum
     if (!['full', 'part'].includes(data.type)) {
       return res.status(400).json({
         message: 'Invalid load type. Must be either "full" or "part"'
       });
     }
 
-    // Check if user is authenticated
     if (!req.user || !req.user.id) {
       return res.status(401).json({ message: 'User not authenticated' });
     }
@@ -56,7 +54,6 @@ export async function listLoads(req, res) {
   }
 }
 
-// Get single load with full details
 export async function getLoadDetails(req, res) {
   try {
     const { id } = req.params;
@@ -73,7 +70,6 @@ export async function getLoadDetails(req, res) {
       return res.status(404).json({ message: 'Load not found' });
     }
 
-    // Check if user has permission to view this load
     const isOwner = load.postedBy._id.toString() === user.id;
     const isAssignedDriver = load.assignedTo && load.assignedTo._id.toString() === user.id;
     const isAdminOrDriver = ['admin', 'superadmin', 'driver'].includes(user.role);
@@ -82,7 +78,6 @@ export async function getLoadDetails(req, res) {
       return res.status(403).json({ message: 'You do not have permission to view this load' });
     }
 
-    // Return load with user's permission level
     res.json({
       load,
       permissions: {
@@ -99,13 +94,12 @@ export async function getLoadDetails(req, res) {
   }
 }
 
-// Helper function to check if load can be cancelled
 function canCancelLoad(load, user) {
   const isOwner = load.postedBy._id.toString() === user.id;
   const isAdmin = ['admin', 'superadmin'].includes(user.role);
   const isDriver = user.role === 'driver';
 
-  // Already cancelled or completed
+ 
   if (['cancelled', 'completed', 'delivered'].includes(load.status)) {
     return false;
   }
@@ -123,7 +117,6 @@ function canCancelLoad(load, user) {
   return false;
 }
 
-// Update load status
 export async function updateLoadStatus(req, res) {
   try {
     const { id } = req.params;
@@ -140,7 +133,6 @@ export async function updateLoadStatus(req, res) {
       return res.status(404).json({ message: 'Load not found' });
     }
 
-    // Check permissions
     const isOwner = load.postedBy.toString() === user.id;
     const isAssignedDriver = load.assignedTo && load.assignedTo.toString() === user.id;
     const isAdminOrDriver = ['admin', 'superadmin', 'driver'].includes(user.role);
@@ -149,7 +141,6 @@ export async function updateLoadStatus(req, res) {
       return res.status(403).json({ message: 'You do not have permission to change load status' });
     }
 
-    // Add status to history
     load.statusHistory.push({
       status,
       changedBy: user.id,

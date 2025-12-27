@@ -4,7 +4,6 @@ import app from './app.js';
 
 const PORT = process.env.PORT || 4000;
 
-// Select MongoDB URI based on DB_MODE
 function getMongoURI() {
   const mode = process.env.DB_MODE || 'local';
   

@@ -18,7 +18,6 @@ export async function register(req, res) {
 
 export async function login(req, res) {
   try {
-    // Check for JWT_SECRET
     if (!process.env.JWT_SECRET) {
       console.error('CRITICAL ERROR: JWT_SECRET is missing in environment variables');
       return res.status(500).json({ message: 'Server Configuration Error: JWT_SECRET is missing.' });

@@ -3,7 +3,6 @@ import crypto from 'crypto';
 import { Payment } from '../models/Payment.js';
 import { Load } from '../models/Load.js';
 
-// Lazy initialize Razorpay instance to avoid crash when credentials are missing
 let razorpay = null;
 
 function getRazorpayInstance() {
@@ -19,16 +18,7 @@ function getRazorpayInstance() {
     return razorpay;
 }
 
-/**
- * Calculate booking fee based on load parameters
- * Fee structure:
- * - Base fee: ₹99
- * - Weight fee: ₹10 per MT (up to ₹200)
- * - Material fee: ₹50-200 based on material type
- * - Truck type fee: ₹50-300 based on truck size
- * 
- * Maximum fee capped at ₹1000
- */
+
 function calculateBookingFee(loadDetails) {
     let baseFee = 99;
     let weightFee = 0;
@@ -39,10 +29,10 @@ function calculateBookingFee(loadDetails) {
     if (loadDetails.weightMT && loadDetails.weightMT > 0) {
         weightFee = Math.min(loadDetails.weightMT * 10, 200);
     } else {
-        weightFee = 50; // Default if weight unknown
+        weightFee = 50;
     }
 
-    // Material fee based on material type
+    // Fee based on material type
     const materialFees = {
         'Packed Food': 100,
         'Electronics': 150,
@@ -50,7 +40,7 @@ function calculateBookingFee(loadDetails) {
         'Machinery': 200,
         'Construction Material': 100,
         'Agricultural Products': 50,
-        'Chemicals': 200, // Hazardous
+        'Chemicals': 200,
         'Textiles': 60,
         'Auto Parts': 120,
         'FMCG': 80,
@@ -58,7 +48,7 @@ function calculateBookingFee(loadDetails) {
     };
     materialFee = materialFees[loadDetails.material] || 100;
 
-    // Truck type fee based on truck size
+    // Fee based on truck size
     const truckTypeFees = {
         'Container Close Body 32FT MXL': 300,
         'Container Close Body 24FT SXL': 250,
@@ -74,13 +64,11 @@ function calculateBookingFee(loadDetails) {
     };
     truckTypeFee = truckTypeFees[loadDetails.truckType] || 100;
 
-    // Calculate total (capped at ₹1000)
     let totalFee = baseFee + weightFee + materialFee + truckTypeFee;
 
-    // Apply number of trucks multiplier (max 2x)
     const trucksMultiplier = Math.min(loadDetails.trucksRequired || 1, 2);
     if (trucksMultiplier > 1) {
-        totalFee = totalFee * (1 + (trucksMultiplier - 1) * 0.5); // 50% extra per additional truck
+        totalFee = totalFee * (1 + (trucksMultiplier - 1) * 0.5);
     }
 
     totalFee = Math.min(Math.round(totalFee), 1000);
@@ -94,10 +82,6 @@ function calculateBookingFee(loadDetails) {
     };
 }
 
-/**
- * Calculate fee for a load (without creating order)
- * POST /api/payments/calculate-fee
- */
 export async function calculateFee(req, res) {
     try {
         const loadDetails = req.body;
@@ -121,13 +105,8 @@ export async function calculateFee(req, res) {
     }
 }
 
-/**
- * Create a Razorpay order for load booking
- * POST /api/payments/create-order
- */
 export async function createOrder(req, res) {
     try {
-        // Check for Razorpay credentials first
         if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
             console.error('Razorpay credentials not configured');
             return res.status(500).json({
@@ -143,7 +122,6 @@ export async function createOrder(req, res) {
             return res.status(401).json({ message: 'User not authenticated' });
         }
 
-        // Validate required fields
         if (!loadDetails.type || !loadDetails.sourceCity || !loadDetails.destinationCity ||
             !loadDetails.material || !loadDetails.scheduledDate) {
             return res.status(400).json({
@@ -151,12 +129,9 @@ export async function createOrder(req, res) {
             });
         }
 
-        // Calculate fee
         const feeBreakdown = calculateBookingFee(loadDetails);
         const amountInRupees = feeBreakdown.totalFee;
-        const amountInPaise = amountInRupees * 100; // Razorpay expects amount in paise
-
-        // Create Razorpay order
+        const amountInPaise = amountInRupees * 100;
         let razorpayOrder;
         try {
             razorpayOrder = await getRazorpayInstance().orders.create({
@@ -181,7 +156,7 @@ export async function createOrder(req, res) {
         // Save payment record in database (amount in RUPEES)
         const payment = await Payment.create({
             razorpayOrderId: razorpayOrder.id,
-            amount: amountInRupees, // Store in RUPEES, not paise
+            amount: amountInRupees,
             currency: 'INR',
             status: 'created',
             feeBreakdown,
@@ -218,10 +193,6 @@ export async function createOrder(req, res) {
     }
 }
 
-/**
- * Verify Razorpay payment and create load
- * POST /api/payments/verify
- */
 export async function verifyPayment(req, res) {
     try {
         const {
@@ -240,7 +211,6 @@ export async function verifyPayment(req, res) {
             return res.status(400).json({ message: 'Missing payment verification details' });
         }
 
-        // Find the payment record
         const payment = await Payment.findOne({ razorpayOrderId: razorpay_order_id });
 
         if (!payment) {
@@ -251,7 +221,6 @@ export async function verifyPayment(req, res) {
             return res.status(403).json({ message: 'Unauthorized access to payment' });
         }
 
-        // Verify signature
         const body = razorpay_order_id + '|' + razorpay_payment_id;
         const expectedSignature = crypto
             .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
@@ -261,7 +230,6 @@ export async function verifyPayment(req, res) {
         const isAuthentic = expectedSignature === razorpay_signature;
 
         if (!isAuthentic) {
-            // Update payment as failed
             payment.status = 'failed';
             payment.failedAt = new Date();
             payment.failureReason = 'Signature verification failed';
@@ -272,14 +240,11 @@ export async function verifyPayment(req, res) {
                 message: 'Payment verification failed'
             });
         }
-
-        // Payment verified - update payment record
         payment.razorpayPaymentId = razorpay_payment_id;
         payment.razorpaySignature = razorpay_signature;
         payment.status = 'captured';
         payment.paidAt = new Date();
 
-        // Create the load
         const load = await Load.create({
             type: payment.loadDetails.type,
             sourceCity: payment.loadDetails.sourceCity,
@@ -295,7 +260,6 @@ export async function verifyPayment(req, res) {
             status: 'open'
         });
 
-        // Link load to payment
         payment.loadId = load._id;
         await payment.save();
 
@@ -317,10 +281,7 @@ export async function verifyPayment(req, res) {
     }
 }
 
-/**
- * Get payment history for a user
- * GET /api/payments/history
- */
+
 export async function getPaymentHistory(req, res) {
     try {
         const userId = req.user?.id;
@@ -353,10 +314,6 @@ export async function getPaymentHistory(req, res) {
     }
 }
 
-/**
- * Get payment details by ID
- * GET /api/payments/:id
- */
 export async function getPaymentById(req, res) {
     try {
         const { id } = req.params;
@@ -397,10 +354,6 @@ export async function getPaymentById(req, res) {
     }
 }
 
-/**
- * Create a Razorpay order for final payment (quote amount - booking fee)
- * POST /api/payments/create-final-order
- */
 export async function createFinalPaymentOrder(req, res) {
     try {
         if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
@@ -421,18 +374,14 @@ export async function createFinalPaymentOrder(req, res) {
             return res.status(400).json({ message: 'Load ID is required' });
         }
 
-        // Find the load
         const load = await Load.findById(loadId).populate('postedBy', 'name email');
         if (!load) {
             return res.status(404).json({ message: 'Load not found' });
         }
 
-        // Verify user owns the load
         if (load.postedBy._id.toString() !== userId) {
             return res.status(403).json({ message: 'Only the load owner can make this payment' });
         }
-
-        // Check load status - must be delivered
         if (load.status !== 'delivered') {
             return res.status(400).json({
                 message: 'Final payment can only be made after delivery is confirmed',
@@ -440,18 +389,16 @@ export async function createFinalPaymentOrder(req, res) {
             });
         }
 
-        // Check if final payment already made
         if (load.finalPaymentId) {
             return res.status(400).json({ message: 'Final payment has already been made for this load' });
         }
 
-        // Calculate final payment amount
         const quoteAmount = load.acceptedQuoteAmount || 0;
         const bookingFee = load.bookingFee || 0;
         const finalAmount = quoteAmount - bookingFee;
 
         if (finalAmount <= 0) {
-            // If booking fee covers or exceeds quote, mark as completed
+            
             load.status = 'completed';
             load.statusHistory.push({
                 status: 'completed',
@@ -470,7 +417,6 @@ export async function createFinalPaymentOrder(req, res) {
 
         const amountInPaise = Math.round(finalAmount * 100);
 
-        // Create Razorpay order
         let razorpayOrder;
         try {
             razorpayOrder = await getRazorpayInstance().orders.create({
@@ -493,10 +439,9 @@ export async function createFinalPaymentOrder(req, res) {
             });
         }
 
-        // Save payment record (amount in RUPEES)
         const payment = await Payment.create({
             razorpayOrderId: razorpayOrder.id,
-            amount: finalAmount, // Store in RUPEES
+            amount: finalAmount, 
             currency: 'INR',
             paymentType: 'final_payment',
             status: 'created',
@@ -530,10 +475,6 @@ export async function createFinalPaymentOrder(req, res) {
     }
 }
 
-/**
- * Verify final payment and complete the load
- * POST /api/payments/verify-final
- */
 export async function verifyFinalPayment(req, res) {
     try {
         const {
@@ -552,7 +493,6 @@ export async function verifyFinalPayment(req, res) {
             return res.status(400).json({ message: 'Missing payment verification details' });
         }
 
-        // Find the payment record
         const payment = await Payment.findOne({ razorpayOrderId: razorpay_order_id });
 
         if (!payment) {
@@ -563,7 +503,6 @@ export async function verifyFinalPayment(req, res) {
             return res.status(403).json({ message: 'Unauthorized access to payment' });
         }
 
-        // Verify signature
         const body = razorpay_order_id + '|' + razorpay_payment_id;
         const expectedSignature = crypto
             .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
@@ -584,14 +523,12 @@ export async function verifyFinalPayment(req, res) {
             });
         }
 
-        // Payment verified
         payment.razorpayPaymentId = razorpay_payment_id;
         payment.razorpaySignature = razorpay_signature;
         payment.status = 'captured';
         payment.paidAt = new Date();
         await payment.save();
 
-        // Update load status to completed
         const load = await Load.findById(payment.loadId);
         if (load) {
             load.status = 'completed';

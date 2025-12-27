@@ -1,13 +1,10 @@
 import mongoose from 'mongoose';
 
 const paymentSchema = new mongoose.Schema({
-  // Razorpay order details
   razorpayOrderId: { type: String, required: true, unique: true, index: true },
   razorpayPaymentId: { type: String, sparse: true, index: true },
   razorpaySignature: { type: String },
-
-  // Payment details
-  amount: { type: Number, required: true }, // Amount in RUPEES
+  amount: { type: Number, required: true },
   currency: { type: String, default: 'INR' },
   paymentType: {
     type: String,
@@ -21,16 +18,14 @@ const paymentSchema = new mongoose.Schema({
     index: true
   },
 
-  // Fee breakdown for transparency
   feeBreakdown: {
-    baseFee: { type: Number }, // Base booking fee
-    weightFee: { type: Number }, // Additional fee based on weight
-    materialFee: { type: Number }, // Fee based on material type (hazardous, fragile, etc.)
-    truckTypeFee: { type: Number }, // Fee based on truck size
-    totalFee: { type: Number } // Total calculated fee
+    baseFee: { type: Number },
+    weightFee: { type: Number },
+    materialFee: { type: Number },
+    truckTypeFee: { type: Number },
+    totalFee: { type: Number }
   },
 
-  // Load details (stored before load is created)
   loadDetails: {
     type: { type: String },
     sourceCity: { type: String },
@@ -42,18 +37,15 @@ const paymentSchema = new mongoose.Schema({
     scheduledDate: { type: Date }
   },
 
-  // References
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-  loadId: { type: mongoose.Schema.Types.ObjectId, ref: 'Load', sparse: true }, // Linked after load creation
+  loadId: { type: mongoose.Schema.Types.ObjectId, ref: 'Load', sparse: true },
 
-  // Metadata
   createdAt: { type: Date, default: Date.now },
   paidAt: { type: Date },
   failedAt: { type: Date },
   failureReason: { type: String }
 });
 
-// Compound indexes for efficient queries
 paymentSchema.index({ userId: 1, status: 1 });
 paymentSchema.index({ createdAt: -1 });
 

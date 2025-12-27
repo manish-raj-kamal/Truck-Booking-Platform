@@ -27,7 +27,7 @@ const otpSchema = new mongoose.Schema({
     expiresAt: {
         type: Date,
         required: true,
-        index: { expires: 0 } // TTL index - automatically delete when expired
+        index: { expires: 0 } 
     },
     createdAt: {
         type: Date,
@@ -35,10 +35,8 @@ const otpSchema = new mongoose.Schema({
     }
 });
 
-// Compound index for quick lookups
 otpSchema.index({ email: 1, purpose: 1 });
 
-// Static method to generate OTP
 otpSchema.statics.generateOTP = function (length = 6) {
     const digits = '0123456789';
     let otp = '';
@@ -48,12 +46,9 @@ otpSchema.statics.generateOTP = function (length = 6) {
     return otp;
 };
 
-// Method to check if OTP is expired
 otpSchema.methods.isExpired = function () {
     return new Date() > this.expiresAt;
 };
-
-// Method to check if max attempts exceeded
 otpSchema.methods.isMaxAttemptsExceeded = function () {
     return this.attempts >= this.maxAttempts;
 };

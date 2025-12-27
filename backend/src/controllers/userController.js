@@ -19,14 +19,13 @@ export async function getProfile(req, res) {
     }
     res.json({
       ...user.toObject(),
-      passwordHash: !!user.passwordHash // Convert to boolean for frontend
+      passwordHash: !!user.passwordHash 
     });
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
 }
 
-// Update profile (name only)
 export async function updateProfile(req, res) {
   try {
     const userId = req.user.id;
@@ -46,7 +45,6 @@ export async function updateProfile(req, res) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate new token with updated info
     const token = jwt.sign(
       {
         id: user._id,
@@ -72,7 +70,6 @@ export async function updateProfile(req, res) {
   }
 }
 
-// Update password (for existing users or Google users setting password)
 export async function updatePassword(req, res) {
   try {
     const userId = req.user.id;
@@ -87,7 +84,6 @@ export async function updatePassword(req, res) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // If user has existing password, verify current password
     if (user.passwordHash) {
       if (!currentPassword) {
         return res.status(400).json({ message: 'Current password is required' });
@@ -98,7 +94,6 @@ export async function updatePassword(req, res) {
       }
     }
 
-    // Hash and save new password
     user.passwordHash = await hashPassword(newPassword);
     await user.save();
 
@@ -109,7 +104,6 @@ export async function updatePassword(req, res) {
   }
 }
 
-// Complete profile (for Google OAuth users)
 export async function completeProfile(req, res) {
   try {
     const userId = req.user.id;
@@ -120,19 +114,15 @@ export async function completeProfile(req, res) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Update name if provided
     if (name && name.trim()) {
       user.name = name.trim();
     }
-
-    // Set password if provided (for Google users)
     if (newPassword && newPassword.length >= 6) {
       user.passwordHash = await hashPassword(newPassword);
     }
 
     await user.save();
 
-    // Generate new token with updated info
     const token = jwt.sign(
       {
         id: user._id,
@@ -174,7 +164,6 @@ export async function updateAvatar(req, res) {
       return res.status(400).json({ message: 'No image file provided' });
     }
 
-    // Convert file to base64 data URL
     const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
 
     const user = await User.findByIdAndUpdate(
@@ -187,7 +176,6 @@ export async function updateAvatar(req, res) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Generate new token with updated avatar
     const token = jwt.sign(
       {
         id: user._id,
@@ -222,12 +210,9 @@ export async function updateUser(req, res) {
   try {
     const { id } = req.params;
     const updates = req.body;
-    const currentUser = req.user; // The logged-in user making the request
+    const currentUser = req.user;
 
-    // Don't allow password updates through this endpoint
     delete updates.passwordHash;
-
-    // Get the target user to check their role
     const targetUser = await User.findById(id);
     if (!targetUser) {
       return res.status(404).json({ message: 'User not found' });
@@ -267,7 +252,7 @@ export async function updateUser(req, res) {
       { new: true, runValidators: true }
     ).select('-passwordHash');
 
-    // Return user data with role for frontend detection
+
     res.json({
       _id: user._id,
       email: user.email,
@@ -284,9 +269,8 @@ export async function updateUser(req, res) {
 export async function deleteUser(req, res) {
   try {
     const { id } = req.params;
-    const currentUser = req.user; // The logged-in user making the request
+    const currentUser = req.user;
 
-    // Get the target user to check their role
     const targetUser = await User.findById(id);
     if (!targetUser) {
       return res.status(404).json({ message: 'User not found' });
