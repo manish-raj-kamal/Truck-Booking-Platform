@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence, useMotionValue } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Truck, Shield, Clock, MapPin, ChevronRight, Star, Globe, TrendingUp, Package, Users, ArrowRight } from 'lucide-react';
+import Footer from '../components/Footer';
 
 // --- Components ---
 
@@ -673,54 +674,7 @@ const CallToAction = () => {
   );
 };
 
-const Footer = () => (
-  <footer className="bg-slate-900 pt-20 pb-10 border-t border-white/5">
-    <div className="container mx-auto px-6">
-      <div className="grid md:grid-cols-4 gap-12 mb-16">
-        <div className="col-span-2">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-tr from-orange-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <Truck className="text-white w-6 h-6" />
-            </div>
-            <span className="text-2xl font-black text-white">TruckSuvidha</span>
-          </div>
-          <p className="text-white/50 max-w-sm">
-            Revolutionizing logistics in India through technology, trust, and transparency.
-          </p>
-        </div>
-        <div>
-          <h4 className="text-white font-bold mb-6">Platform</h4>
-          <ul className="space-y-4 text-white/50">
-            <li><Link to="/load-board" className="hover:text-white transition-colors">Find Loads</Link></li>
-            <li><Link to="/truck-board" className="hover:text-white transition-colors">Find Trucks</Link></li>
-            <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-white font-bold mb-6">Services</h4>
-          <ul className="space-y-4 text-white/50">
-            <li><Link to="/demo" className="hover:text-white transition-colors">View Demo</Link></li>
-            <li><Link to="/load-board" className="hover:text-white transition-colors">Load Booking</Link></li>
-            <li><Link to="/truck-board" className="hover:text-white transition-colors">Truck Booking</Link></li>
-            <li><Link to="/" className="hover:text-white transition-colors">GPS Tracking</Link></li>
-            <li><Link to="/" className="hover:text-white transition-colors">Insurance</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-white font-bold mb-6">Company</h4>
-          <ul className="space-y-4 text-white/50">
-            <li><Link to="/" className="hover:text-white transition-colors">About Us</Link></li>
-            <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-            <li><Link to="/" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-          </ul>
-        </div>
-      </div>
-      <div className="pt-8 border-t border-white/5 text-center text-white/30 text-sm">
-        © 2025 TruckSuvidha. All rights reserved.
-      </div>
-    </div>
-  </footer>
-);
+
 
 export default function LandingPage() {
   return (
