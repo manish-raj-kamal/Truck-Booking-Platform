@@ -19,7 +19,7 @@ export async function getProfile(req, res) {
     }
     res.json({
       ...user.toObject(),
-      passwordHash: !!user.passwordHash 
+      passwordHash: !!user.passwordHash
     });
   } catch (e) {
     res.status(500).json({ message: e.message });
@@ -51,7 +51,6 @@ export async function updateProfile(req, res) {
         role: user.role,
         email: user.email,
         name: user.name,
-        avatar: user.avatar,
         authProvider: user.authProvider,
         passwordHash: !!user.passwordHash
       },
@@ -129,7 +128,6 @@ export async function completeProfile(req, res) {
         role: user.role,
         email: user.email,
         name: user.name,
-        avatar: user.avatar,
         authProvider: user.authProvider,
         passwordHash: !!user.passwordHash
       },
@@ -182,7 +180,6 @@ export async function updateAvatar(req, res) {
         role: user.role,
         email: user.email,
         name: user.name,
-        avatar: user.avatar,
         authProvider: user.authProvider,
         passwordHash: !!user.passwordHash
       },
