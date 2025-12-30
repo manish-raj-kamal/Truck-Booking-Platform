@@ -446,6 +446,15 @@ const ParallaxStats = () => {
 
 const HowItWorksSection = () => {
   const containerRef = useRef(null);
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => setIsDesktop(window.innerWidth >= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -455,20 +464,17 @@ const HowItWorksSection = () => {
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
   // Line path animation (0 to 1 for SVG pathLength)
-  // 0% -> 0, 30% -> 0.5 (reaches Step 2), 70% -> 1 (reaches Step 3)
   const pathLength = useTransform(smoothProgress, [0.05, 0.35, 0.75], [0, 0.5, 1]);
 
-  // Step 1: Appears at ~10% scroll (early, before line starts moving much)
+  // Step animations for Desktop
   const step1Opacity = useTransform(smoothProgress, [0.05, 0.12], [0, 1]);
   const step1Scale = useTransform(smoothProgress, [0.05, 0.12], [0.6, 1]);
   const step1Y = useTransform(smoothProgress, [0.05, 0.12], [40, 0]);
 
-  // Step 2: Appears at ~30-35% scroll (when line reaches Step 2)
   const step2Opacity = useTransform(smoothProgress, [0.28, 0.38], [0, 1]);
   const step2Scale = useTransform(smoothProgress, [0.28, 0.38], [0.6, 1]);
   const step2Y = useTransform(smoothProgress, [0.28, 0.38], [40, 0]);
 
-  // Step 3: Appears at ~65-75% scroll (when line reaches Step 3)
   const step3Opacity = useTransform(smoothProgress, [0.65, 0.75], [0, 1]);
   const step3Scale = useTransform(smoothProgress, [0.65, 0.75], [0.6, 1]);
   const step3Y = useTransform(smoothProgress, [0.65, 0.75], [40, 0]);
@@ -476,9 +482,9 @@ const HowItWorksSection = () => {
   // Flare glow intensity based on line movement
   const flareOpacity = useTransform(smoothProgress, [0.05, 0.10, 0.75, 0.80], [0, 1, 1, 0.3]);
   const flareScale = useTransform(smoothProgress, [0.05, 0.12], [0.5, 1]);
-
-  // Flare position along the path (percentage)
   const flareProgress = useTransform(smoothProgress, [0.05, 0.35, 0.75], [0, 0.5, 1]);
+  const flareLeft = useTransform(flareProgress, [0, 0.5, 1], ['7.5%', '50%', '92.5%']);
+  const flareTop = useTransform(flareProgress, [0, 0.25, 0.5, 0.75, 1], ['50%', '25%', '50%', '75%', '50%']);
 
   const steps = [
     {
@@ -514,21 +520,26 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section ref={containerRef} className="h-[400vh] relative bg-slate-950">
-      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+    <section
+      ref={containerRef}
+      className={`relative bg-slate-950 ${isDesktop ? 'h-[400vh]' : 'py-20 min-h-screen'}`}
+    >
+      <div className={`${isDesktop ? 'sticky top-0 h-screen flex flex-col justify-center overflow-hidden' : 'relative px-4'}`}>
 
         {/* Background Ambience */}
         <div className="absolute inset-0 bg-slate-950 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-500/10 blur-[120px] rounded-full mix-blend-screen" />
-          {/* Dynamic glow that follows progress */}
-          <motion.div
-            style={{ opacity: flareOpacity }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-purple-500/20 blur-[100px] rounded-full mix-blend-screen"
-          />
+          {/* Dynamic glow - only visible on desktop scroll */}
+          {isDesktop && (
+            <motion.div
+              style={{ opacity: flareOpacity }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-purple-500/20 blur-[100px] rounded-full mix-blend-screen"
+            />
+          )}
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-24">
+          <div className="text-center mb-16 md:mb-24">
             <span
               className="inline-block py-1 px-3 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-4"
             >
@@ -542,91 +553,91 @@ const HowItWorksSection = () => {
           </div>
 
           <div className="relative max-w-5xl mx-auto">
-            {/* Curved Connecting Line - SVG */}
-            <div className="absolute top-[3rem] left-0 w-full hidden md:block" style={{ height: '60px' }}>
-              <svg
-                viewBox="0 0 800 60"
-                fill="none"
-                className="w-full h-full"
-                preserveAspectRatio="none"
-                style={{ overflow: 'visible' }}
-              >
-                {/* Base path (faint) */}
-                <path
-                  d="M 60 30 
-                     C 150 10, 250 50, 400 30 
-                     C 550 10, 650 50, 740 30"
-                  stroke="rgba(255,255,255,0.05)"
-                  strokeWidth="4"
-                  strokeLinecap="round"
+            {/* Desktop Only: Curved Connecting Line */}
+            {isDesktop && (
+              <div className="absolute top-[3rem] left-0 w-full hidden md:block" style={{ height: '60px' }}>
+                <svg
+                  viewBox="0 0 800 60"
                   fill="none"
-                />
+                  className="w-full h-full"
+                  preserveAspectRatio="none"
+                  style={{ overflow: 'visible' }}
+                >
+                  <path
+                    d="M 60 30 
+                       C 150 10, 250 50, 400 30 
+                       C 550 10, 650 50, 740 30"
+                    stroke="rgba(255,255,255,0.05)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                  <motion.path
+                    d="M 60 30 
+                       C 150 10, 250 50, 400 30 
+                       C 550 10, 650 50, 740 30"
+                    stroke="url(#lineGradient)"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    fill="none"
+                    style={{
+                      pathLength: pathLength,
+                      filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.6))'
+                    }}
+                  />
+                  <defs>
+                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#3b82f6" />
+                      <stop offset="50%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#ec4899" />
+                    </linearGradient>
+                  </defs>
+                </svg>
 
-                {/* Animated gradient path */}
-                <motion.path
-                  d="M 60 30 
-                     C 150 10, 250 50, 400 30 
-                     C 550 10, 650 50, 740 30"
-                  stroke="url(#lineGradient)"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  fill="none"
+                <motion.div
                   style={{
-                    pathLength: pathLength,
-                    filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.6))'
+                    opacity: flareOpacity,
+                    scale: flareScale,
+                    left: flareLeft,
+                    top: flareTop
                   }}
-                />
+                  className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+                >
+                  <div className="absolute -inset-6 bg-white/20 rounded-full blur-2xl animate-pulse" />
+                  <div className="absolute -inset-3 bg-white/40 rounded-full blur-lg" />
+                  <div className="relative w-5 h-5 bg-white rounded-full shadow-[0_0_25px_rgba(255,255,255,1),0_0_50px_rgba(168,85,247,0.9)]" />
+                </motion.div>
+              </div>
+            )}
 
-                {/* Gradient definition */}
-                <defs>
-                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#3b82f6" />
-                    <stop offset="50%" stopColor="#a855f7" />
-                    <stop offset="100%" stopColor="#ec4899" />
-                  </linearGradient>
-                </defs>
-              </svg>
-
-              {/* Burning Flare at the Tip - follows the curve */}
-              <motion.div
-                style={{
-                  opacity: flareOpacity,
-                  scale: flareScale,
-                  left: useTransform(flareProgress, [0, 0.5, 1], ['7.5%', '50%', '92.5%']),
-                  top: useTransform(flareProgress, [0, 0.25, 0.5, 0.75, 1], ['50%', '25%', '50%', '75%', '50%'])
-                }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-              >
-                {/* Outer glow */}
-                <div className="absolute -inset-6 bg-white/20 rounded-full blur-2xl animate-pulse" />
-                {/* Middle glow */}
-                <div className="absolute -inset-3 bg-white/40 rounded-full blur-lg" />
-                {/* Inner core */}
-                <div className="relative w-5 h-5 bg-white rounded-full shadow-[0_0_25px_rgba(255,255,255,1),0_0_50px_rgba(168,85,247,0.9)]" />
-              </motion.div>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-16 md:gap-8 relative pt-8">
+            <div className="grid md:grid-cols-3 gap-12 md:gap-8 relative pt-0 md:pt-8">
               {steps.map((step, idx) => (
                 <motion.div
                   key={step.id}
-                  style={{ opacity: step.opacity, scale: step.scale, y: step.y }}
+                  {...(isDesktop ? {
+                    style: { opacity: step.opacity, scale: step.scale, y: step.y }
+                  } : {
+                    initial: { opacity: 0, y: 50 },
+                    whileInView: { opacity: 1, y: 0 },
+                    transition: { duration: 0.6, delay: idx * 0.2 },
+                    viewport: { once: true, margin: "-50px" }
+                  })}
                   className="relative flex flex-col items-center text-center group"
                 >
                   {/* Step Number Badge */}
                   <div className={`
-                      w-24 h-24 rounded-3xl bg-gradient-to-br mb-8 flex items-center justify-center relative z-10
+                      w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-gradient-to-br mb-6 md:mb-8 flex items-center justify-center relative z-10
                       shadow-[0_0_30px_rgba(59,130,246,0.2)]
                       ${step.color === 'blue' ? 'from-blue-500 to-blue-600 shadow-blue-500/30' : ''}
                       ${step.color === 'purple' ? 'from-purple-500 to-purple-600 shadow-purple-500/30' : ''}
                       ${step.color === 'pink' ? 'from-pink-500 to-pink-600 shadow-pink-500/30' : ''}
                     `}
                   >
-                    <span className="text-4xl font-black text-white">{step.id}</span>
+                    <span className="text-3xl md:text-4xl font-black text-white">{step.id}</span>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-white mb-4">{step.title}</h3>
-                  <p className="text-white/50 leading-relaxed max-w-xs">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">{step.title}</h3>
+                  <p className="text-white/50 leading-relaxed max-w-xs text-sm md:text-base">
                     {step.desc}
                   </p>
                 </motion.div>
@@ -674,8 +685,6 @@ const CallToAction = () => {
   );
 };
 
-
-
 export default function LandingPage() {
   return (
     <div className="bg-slate-950 min-h-screen text-slate-200 overflow-x-clip selection:bg-orange-500/30 selection:text-orange-200">
@@ -684,7 +693,7 @@ export default function LandingPage() {
       <MovingTrucksSection />
       <FeaturesSection />
       <ParallaxStats />
-      <HowItWorksSection />
+      <HowItWorksSection key="how-it-works-fixed" />
       <CallToAction />
       <Footer />
     </div>
