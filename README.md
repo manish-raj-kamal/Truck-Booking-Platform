@@ -54,6 +54,7 @@ A comprehensive logistics platform connecting shippers with transporters across 
 
 ## 🔧 Environment Variables
 
+
 ### Backend (.env)
 ```env
 MONGODB_URI=your_mongodb_connection_string
