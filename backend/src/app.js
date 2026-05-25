@@ -16,8 +16,35 @@ import otpRoutes from './routes/otpRoutes.js';
 
 const app = express();
 
+// Configure CORS to allow the deployed frontend and local Vite dev ports.
+const productionFrontendURL = process.env.FRONTEND_URL || 'https://somya-truck-booking.vercel.app';
+const allowedOrigins = new Set([
+  productionFrontendURL,
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174'
+]);
 app.use(cors({
-  origin: process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' ? 'https://somya-truck-booking.vercel.app' : 'http://localhost:5173'),
+  origin(origin, callback) {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.has(origin)) {
+      return callback(null, true);
+    }
+
+    if (process.env.NODE_ENV === 'production' && /^https:\/\/.+\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    if (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked origin: ${origin}`), false);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

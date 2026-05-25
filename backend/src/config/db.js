@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 
 export async function connectDB(uri) {
   if (mongoose.connection.readyState >= 1) {
-    return;
+    return true;
   }
 
   if (!uri) {
     console.error('Missing MONGODB_URI environment variable');
-    return;
+    return false;
   }
   mongoose.connection.on('connected', () => console.log('MongoDB connected'));
   mongoose.connection.on('error', (err) => console.error('MongoDB error:', err.message));
@@ -17,8 +17,10 @@ export async function connectDB(uri) {
       autoIndex: true,
       serverSelectionTimeoutMS: 10000
     });
+    return true;
   } catch (err) {
     console.error('MongoDB connection failure:', err.message);
+    return false;
   }
 }
 
